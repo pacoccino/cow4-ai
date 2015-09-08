@@ -10,7 +10,7 @@ var myId = {
 
 var communication;
 
-var auth = function() {
+var auth = function(callback) {
     var request = {
         type:'authenticate',
         name: myId.name,
@@ -22,7 +22,7 @@ var auth = function() {
         if (response.type && response.type === 'id' && response.id) {
             myId.id = response.id;
             console.log("Authentication success, ID: ", myId.id);
-            //listenGame();
+            callback && callback();
         }
         else {
             console.error("Authentication error");
@@ -38,7 +38,11 @@ try {
     var client = net.connect(Config.gameServer, function() {
         communication = new Communication(client);
         console.log('connected to server!');
-        auth();
+
+        auth(function() {
+            var ai = new AI(communication);
+            ai.listen.call(ai);
+        });
     });
 
     client.on('end', function() {
