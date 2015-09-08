@@ -1,6 +1,6 @@
 {
   "name": "cow4-ai",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Artificial Intelligence for Code Of War 2015",
   "main": "ia.js",
   "dependencies": {
@@ -8,7 +8,9 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "server": "cd node_modules/codeofwar && node js/release/Server.js",
+    "ia": "node client.js"
   },
   "repository": {
     "type": "git",

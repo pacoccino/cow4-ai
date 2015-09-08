@@ -1,9 +1,20 @@
 var EOF = "#end#";
 
 function Communication(socket) {
-    this.socket = socket;
+    var self = this;
 
+    self.socket = socket;
 
+    self.socket.on('data', function(buffer) {
+        var data = self.unFormat(buffer);
+
+        if(self.listener) {
+            self.listener(data);
+        }
+        else {
+            console.log("Data received without listener", data);
+        }
+    });
 }
 
 Communication.prototype.format = function(message) {
@@ -31,10 +42,13 @@ Communication.prototype.send = function(data, callback) {
     this.socket.write(this.format(data), 'utf-8', callback);
 };
 
-Communication.prototype.listen = function(callback) {
-    this.socket('data', function(data) {
-        callback(this.unFormat(data));
-    });
+Communication.prototype.setListener = function(listener) {
+    if(listener) {
+        this.listener = listener;
+    }
+    else {
+        this.listener = null;
+    }
 };
 
 module.exports = Communication;
