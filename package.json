@@ -1,0 +1,30 @@
+{
+  "name": "cow4-ai",
+  "version": "0.0.1",
+  "description": "Artificial Intelligence for Code Of War 2015",
+  "main": "ia.js",
+  "dependencies": {
+    "codeofwar": "^1.0.0",
+    "websocket": "^1.0.21",
+    "ws": "^0.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pakokrew/cow4-ai"
+  },
+  "keywords": [
+    "codeofwar",
+    "cow4",
+    "ai"
+  ],
+  "author": "pakokrew@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pakokrew/cow4-ai/issues"
+  },
+  "homepage": "https://github.com/pakokrew/cow4-ai"
+}
