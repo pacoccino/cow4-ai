@@ -4,9 +4,7 @@
   "description": "Artificial Intelligence for Code Of War 2015",
   "main": "ia.js",
   "dependencies": {
-    "codeofwar": "^1.0.0",
-    "websocket": "^1.0.21",
-    "ws": "^0.8.0"
+    "codeofwar": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
