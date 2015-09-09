@@ -1,6 +1,6 @@
 var Config = require('./map');
 
-var AI = function(communication) {
+var GameController = function(communication) {
     this.communication = communication;
 
     this.pm = 0;
@@ -9,7 +9,7 @@ var AI = function(communication) {
     this.map = new Map();
 };
 
-AI.prototype.getIAInfo = function() {
+GameController.prototype.getIGameControllernfo = function() {
     return {
         avatar: Config.avatar,
         name: Config.name,
@@ -19,13 +19,13 @@ AI.prototype.getIAInfo = function() {
     };
 };
 
-AI.prototype.processIa = function(callback) {
+GameController.prototype.processIa = function(callback) {
     var actions = [];
 
     callback(actions);
 }
 
-AI.prototype.getTurnOrder = function(gameMap, callback) {
+GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
     console.log("gameMap : ", gameMap);
 
@@ -35,7 +35,7 @@ AI.prototype.getTurnOrder = function(gameMap, callback) {
 
             var response = {
                 type: 'turnResult',
-                ia: this.getIAInfo(),
+                ia: this.getIGameControllernfo(),
                 actions: actions
             };
 
@@ -43,7 +43,7 @@ AI.prototype.getTurnOrder = function(gameMap, callback) {
     };
 };
 
-AI.prototype.listenGame = function(data) {
+GameController.prototype.listenGame = function(data) {
 
     if(data.type && data.type === 'getTurnOrder') {
 
@@ -53,9 +53,9 @@ AI.prototype.listenGame = function(data) {
     }
 };
 
-AI.prototype.listen = function() {
+GameController.prototype.listen = function() {
     this.communication.setListener(this.listenGame);
 };
 
 
-module.exports = AI;
+module.exports = GameController;

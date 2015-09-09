@@ -1,7 +1,7 @@
 var net = require('net');
 var Communication = require('./modules/communication');
 var Config = require('./modules/config');
-var AI = require('./modules/ai');
+var GameController = require('./modules/gamecontroller');
 
 var communication;
 
@@ -35,8 +35,8 @@ try {
         console.log('connected to server!');
 
         auth(function() {
-            var ai = new AI(communication);
-            ai.listen.call(ai);
+            var gamecontroller = new GameController(communication);
+            gamecontroller.listen.call(gamecontroller);
         });
     });
 
