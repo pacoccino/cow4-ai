@@ -51,4 +51,14 @@ Communication.prototype.setListener = function(listener) {
     }
 };
 
+Communication.prototype.getId = function() {
+
+    return this.AiId;
+};
+
+Communication.prototype.setId = function(id) {
+
+    this.AiId = id;
+};
+
 module.exports = Communication;

@@ -3,24 +3,19 @@ var Communication = require('./modules/communication');
 var Config = require('./modules/config');
 var AI = require('./modules/ai');
 
-var myId = {
-    name: Config.myId.name,
-    avatar: Config.myId.avatar
-};
-
 var communication;
 
 var auth = function(callback) {
     var request = {
         type:'authenticate',
-        name: myId.name,
-        avatar: myId.avatar
+        name: Config.myId.name,
+        avatar: Config.myId.avatar
     };
 
     var authListener = function(data) {
         var response = data;
         if (response.type && response.type === 'id' && response.id) {
-            myId.id = response.id;
+            communication.setId(response.id);
             console.log("Authentication success, ID: ", myId.id);
             callback && callback();
         }
