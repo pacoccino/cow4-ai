@@ -5,16 +5,31 @@ function Communication(socket) {
 
     self.socket = socket;
 
+    self.listener = null;
+    self.listenerScope = null;
     self.myId = null;
 
-    self.socket.on('data', function(buffer) {
-        var data = self.unFormat(buffer);
+    var buffer = new Buffer(0);
 
-        if(self.listener) {
-            self.listener(data);
-        }
-        else {
-            console.log("Data received without listener", data);
+    var bufferEnded = function() {
+        var string = buffer.toString();
+        return (string.indexOf(EOF) !== -1);
+    };
+
+    self.socket.on('data', function(receivedData) {
+        buffer = Buffer.concat([buffer, receivedData]);
+
+        if(bufferEnded()) {
+
+            var data = self.unFormat(buffer);
+
+            if(self.listener) {
+                self.listener.apply(self.listenerScope, [data]);
+            }
+            else {
+                console.log("Data received without listener", data);
+            }
+            buffer = new Buffer(0);
         }
     });
 }
@@ -44,9 +59,10 @@ Communication.prototype.send = function(data, callback) {
     this.socket.write(this.format(data), 'utf-8', callback);
 };
 
-Communication.prototype.setListener = function(listener) {
+Communication.prototype.setListener = function(listener, listenerScope) {
     if(listener) {
         this.listener = listener;
+        this.listenerScope = listenerScope;
     }
     else {
         this.listener = null;

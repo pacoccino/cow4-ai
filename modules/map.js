@@ -15,7 +15,7 @@ Map.prototype.setMap = function(gameMap) {
 }
 
 Map.prototype.processMap = function() {
-
+    console.log(this.gameMap);
 };
 
 module.exports = Map;

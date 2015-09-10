@@ -1,10 +1,10 @@
 function IA(gameController) {
-    this.game = game;
+    this.game = gameController;
 }
 
 IA.prototype.getActions = function(callback) {
 
     callback([]);
-}
+};
 
 module.exports = IA;

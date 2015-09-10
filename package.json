@@ -4,13 +4,12 @@
   "description": "Artificial Intelligence for Code Of War 2015",
   "main": "ia.js",
   "dependencies": {
-    "codeofwar": "^1.0.0"
+    "codeofwar": "^1.0.0",
+    "lodash": "^3.10.1"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "cd node_modules/codeofwar && node js/release/Server.js",
-    "ia": "node client.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

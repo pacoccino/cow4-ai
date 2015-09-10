@@ -16,11 +16,12 @@ var auth = function(callback) {
         var response = data;
         if (response.type && response.type === 'id' && response.id) {
             communication.setId(response.id);
-            console.log("Authentication success, ID: ", myId.id);
+            console.log("Authentication success, ID: ", response.id);
             callback && callback();
         }
         else {
-            console.error("Authentication error");
+            console.error("Authentication error, exiting");
+            process.exit(0);
         }
     };
 
@@ -32,7 +33,7 @@ var auth = function(callback) {
 try {
     var client = net.connect(Config.gameServer, function() {
         communication = new Communication(client);
-        console.log('connected to server!');
+        console.log('Connected to server ! (' + Config.gameServer.host + ':' + Config.gameServer.port + ')');
 
         auth(function() {
             var gamecontroller = new GameController(communication);
@@ -40,8 +41,19 @@ try {
         });
     });
 
-    client.on('end', function() {
-        console.log('disconnected from server');
+    client.on('error', function(e) {
+        switch(e.code) {
+            case "ECONNRESET":
+                console.error("Served went down, stopping");
+                process.exit(0);
+                break;
+            default:
+                console.error('Unknown socket error : ', e);
+        }
+    });
+
+    client.on('close', function() {
+        console.log('Connection closed.');
     });
 
 }

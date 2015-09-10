@@ -1,4 +1,8 @@
-var Config = require('./map');
+var Config = require('./config');
+var Map = require('./map');
+var Player = require('./player');
+var IA = require('./ia');
+var _ = require('lodash')
 
 var GameController = function(communication) {
     this.communication = communication;
@@ -6,16 +10,17 @@ var GameController = function(communication) {
     this.players = [];
     this.map = new Map(this);
     this.ia = new IA(this);
+
+    this.myPlayer = new Player();
+    this.myPlayer.id = this.communication.getId();
+    this.myPlayer.name = Config.name;
+    this.myPlayer.avatar = Config.avatar;
+
+    this.players.push(this.myPlayer);
 };
 
-GameController.prototype.getIAInfo = function() {
-    return {
-        avatar: Config.avatar,
-        name: Config.name,
-        id: communication.getId(),
-        pm: players[communication.getId()].pm,
-        items: players[communication.getId()].items
-    };
+GameController.prototype.getPlayerById = function(id) {
+    return _.find(this.players, {id:id});
 };
 
 GameController.prototype.processIa = function(callback) {
@@ -23,38 +28,39 @@ GameController.prototype.processIa = function(callback) {
     this.ia.getActions(function(actions) {
         callback(actions);
     });
-}
+};
 
 GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
-    console.log("gameMap : ", gameMap);
+    var self = this;
 
-    this.map.setMap(gameMap);
+    self.map.setMap(gameMap);
 
-    this.processIa(function(actions) {
+    self.processIa(function(actions) {
 
         var response = {
             type: 'turnResult',
-            ia: this.getIAInfo(),
+            ia: self.myPlayer.toPublic(),
             actions: actions
         };
 
         callback(response);
-    };
+    });
 };
 
 GameController.prototype.listenGame = function(data) {
 
+    var self = this;
     if(data.type && data.type === 'getTurnOrder') {
 
-        this.getTurnOrder(data.data, function(turnOrder) {
-            this.communication.send(turnOrder);
+        self.getTurnOrder(data.data, function(turnOrder) {
+            self.communication.send(turnOrder);
         });
     }
 };
 
 GameController.prototype.listen = function() {
-    this.communication.setListener(this.listenGame);
+    this.communication.setListener(this.listenGame, this);
 };
 
 
