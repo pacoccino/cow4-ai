@@ -3,26 +3,26 @@ var Config = require('./map');
 var GameController = function(communication) {
     this.communication = communication;
 
-    this.pm = 0;
-    this.items = [];
-
-    this.map = new Map();
+    this.players = [];
+    this.map = new Map(this);
+    this.ia = new IA(this);
 };
 
-GameController.prototype.getIGameControllernfo = function() {
+GameController.prototype.getIAInfo = function() {
     return {
         avatar: Config.avatar,
         name: Config.name,
         id: communication.getId(),
-        pm: this.pm,
-        items: this.items
+        pm: players[communication.getId()].pm,
+        items: players[communication.getId()].items
     };
 };
 
 GameController.prototype.processIa = function(callback) {
-    var actions = [];
 
-    callback(actions);
+    this.ia.getActions(function(actions) {
+        callback(actions);
+    });
 }
 
 GameController.prototype.getTurnOrder = function(gameMap, callback) {
@@ -33,13 +33,13 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
     this.processIa(function(actions) {
 
-            var response = {
-                type: 'turnResult',
-                ia: this.getIGameControllernfo(),
-                actions: actions
-            };
+        var response = {
+            type: 'turnResult',
+            ia: this.getIAInfo(),
+            actions: actions
+        };
 
-            callback(response);
+        callback(response);
     };
 };
 

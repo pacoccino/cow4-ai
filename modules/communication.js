@@ -5,6 +5,8 @@ function Communication(socket) {
 
     self.socket = socket;
 
+    self.myId = null;
+
     self.socket.on('data', function(buffer) {
         var data = self.unFormat(buffer);
 
@@ -53,12 +55,12 @@ Communication.prototype.setListener = function(listener) {
 
 Communication.prototype.getId = function() {
 
-    return this.AiId;
+    return this.myId;
 };
 
 Communication.prototype.setId = function(id) {
 
-    this.AiId = id;
+    this.myId = id;
 };
 
 module.exports = Communication;

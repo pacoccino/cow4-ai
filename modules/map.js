@@ -1,6 +1,8 @@
-function Map(gameMap) {
+function Map(game, gameMap) {
+    this.game = game;
+
     this.gameMap = null;
-    
+
     if(gameMap) {
         this.setMap(gameMap);
     }
