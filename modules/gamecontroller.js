@@ -2,7 +2,7 @@ var Config = require('./config');
 var Map = require('./map');
 var Player = require('./player');
 var IA = require('./ia');
-var _ = require('lodash')
+var _ = require('lodash');
 
 var GameController = function(communication) {
     this.communication = communication;
@@ -11,16 +11,21 @@ var GameController = function(communication) {
     this.map = new Map(this);
     this.ia = new IA(this);
 
+    /*
     this.myPlayer = new Player();
     this.myPlayer.id = this.communication.getId();
     this.myPlayer.name = Config.name;
     this.myPlayer.avatar = Config.avatar;
 
-    this.players.push(this.myPlayer);
+    this.players.push(this.myPlayer);*/
 };
 
 GameController.prototype.getPlayerById = function(id) {
     return _.find(this.players, {id:id});
+};
+
+GameController.prototype.getSheep = function() {
+    return _.find(this.players, {name:"SheepIA"});
 };
 
 GameController.prototype.processIa = function(callback) {
@@ -35,12 +40,17 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
     var self = this;
 
     self.map.setMap(gameMap);
+    self.map.processMap();
+
+    console.log("New turn : ", self.map.currentTurn);
 
     self.processIa(function(actions) {
 
+        var IAinfo = self.getPlayerById(self.communication.getId());
+
         var response = {
             type: 'turnResult',
-            ia: self.myPlayer.toPublic(),
+            ia: IAinfo,
             actions: actions
         };
 

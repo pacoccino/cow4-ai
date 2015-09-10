@@ -14,13 +14,9 @@ Config.IAs = [
     {
         name: "Basic",
         value: "BasicIA"
-    },
-    {
-        name: "Complex",
-        value: "BasicIA"
     }
 ];
 
-Config.seletedIA = BasicIA;
+Config.seletedIA = Config.IAs[0].value;
 
 module.exports = Config;

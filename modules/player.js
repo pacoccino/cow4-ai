@@ -1,12 +1,25 @@
-function Player() {
+function Player(basePlayer) {
 
-    this.id = 0;   
-    this.name = 0;
-    this.avatar = 0;
+    basePlayer = basePlayer || {};
 
-    this.pm = 0;
-    this.items = [];
+    this.setFrom(basePlayer);
+}
+
+Player.prototype.setFrom = function (basePlayer) {
+
+    basePlayer = basePlayer || {};
+
+    this.id = basePlayer.id || this.id || 0;
+    this.name = basePlayer.name || this.name || 0;
+    this.avatar = basePlayer.avatar || this.avatar || 0;
+
+    this.items = basePlayer.items || this.items || [];
+    this.pm = basePlayer.pm || this.pm || 0;
+    this.invisibilityDuration = basePlayer.invisibilityDuration || this.invisibilityDuration || 0;
+
+    this.position = basePlayer.position || this.position || 0;
 };
+
 
 
 Player.prototype.toPublic = function () {
@@ -17,6 +30,7 @@ Player.prototype.toPublic = function () {
         pm: this.pm,
         items: this.items
     };
-}
+    return publicPlayer;
+};
 
 module.exports = Player;
