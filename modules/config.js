@@ -10,4 +10,17 @@ Config.gameServer = {
     port:8127
 };
 
+Config.IAs = [
+    {
+        name: "Basic",
+        value: "BasicIA"
+    },
+    {
+        name: "Complex",
+        value: "BasicIA"
+    }
+];
+
+Config.seletedIA = BasicIA;
+
 module.exports = Config;
