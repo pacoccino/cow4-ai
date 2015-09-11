@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html ng-app="IAViz" ng-controller="mainCtrl">
+<head>
+    <title>Duplication Rapports</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+
+    <style>
+        .row {
+            margin:0;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+        .cell {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border: 1px solid grey;
+            padding: 0;
+            margin-left: 3px;
+            margin-right: 3px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <h1>IAViz</h1>
+
+    <div ng-repeat="row in map" class="row">
+        <div ng-repeat="cell in row" class="cell" ng-style="getCellStyle(cell)">
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

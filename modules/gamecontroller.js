@@ -39,7 +39,7 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
     var self = this;
 
-    self.map.setMap(gameMap);
+    self.map.setGameMap(gameMap);
     self.map.processMap();
 
     console.log("New turn : ", self.map.currentTurn);

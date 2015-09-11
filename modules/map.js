@@ -9,12 +9,14 @@ function Map(game, gameMap) {
     this.iaList = [];
     this.cells = [];
 
+    this.fetchedMap = [];
+
     if(gameMap) {
-        this.setMap(gameMap);
+        this.setGameMap(gameMap);
     }
 }
 
-Map.prototype.setMap = function(gameMap) {
+Map.prototype.setGameMap = function(gameMap) {
     this.gameMap = gameMap;
 
     this.currentTurn = this.gameMap.currentTurn;
@@ -24,7 +26,11 @@ Map.prototype.setMap = function(gameMap) {
     this.mapSize = {
         height: this.cells.length,
         width: this.cells[0].length
-    }
+    };
+};
+
+Map.prototype.getMap = function() {
+    return this.fetchedMap;
 };
 
 
@@ -49,7 +55,21 @@ Map.prototype.processMap = function() {
 };
 
 Map.prototype.getFetchedCell = function(x,y) {
-    return this.fetchedMap[x + y * this.mapSize.width];
+
+    return this.fetchedMap[y][x];
+};
+
+Map.prototype.setFetchedCell = function(myCell, x, y) {
+
+    while(this.fetchedMap.length <= y) {
+        this.fetchedMap.push([]);
+    }
+
+    while(this.fetchedMap[y].length <= x) {
+        this.fetchedMap[y].push({});
+    }
+
+    this.fetchedMap[y][x] = myCell;
 };
 
 Map.prototype.forEachCell = function(fn) {
@@ -138,34 +158,34 @@ Map.prototype.fetchCell = function(cell, x, y) {
 };
 
 Map.prototype.fetchCells = function() {
-    var matrix = [];
-
     var self = this;
 
     self.forEachCell(function(cell, x, y) {
-
         var myCell = self.fetchCell.apply(self, [cell, x, y]);
 
-        matrix.push(myCell);
+        self.setFetchedCell.apply(self, [myCell, x, y]);
+        //this.fetchedMap[y][x] = myCell;
     });
-
-    this.fetchedMap = matrix;
 };
 
 Map.prototype.localteNFetch = function() {
-    var matrix = [];
+    var row = [];
 
     var self = this;
 
-    self.forEachCell(function(cell, x, y) {
+    this.fetchedMap = [];
 
+    for(var y=0; y<this.mapSize.height; y++) {
+        this.fetchedMap.push([]);
+    }
+
+    self.forEachCell(function(cell, x, y) {
         var myCell = self.fetchCell.apply(self, [cell, x, y]);
-        matrix.push(myCell);
+
+        self.fetchedMap[y][x] = myCell;
 
         self.locatePlayer.apply(self, [cell, x, y]);
     });
-
-    this.fetchedMap = matrix;
 };
 
 Map.prototype.drawCells = function() {

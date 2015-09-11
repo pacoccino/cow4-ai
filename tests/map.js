@@ -15,7 +15,7 @@ describe('Map', function() {
     });
 
     it('fetch players', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchPlayers();
 
         expect(game.players.length).to.equal(3);
@@ -29,7 +29,7 @@ describe('Map', function() {
 
     it('fetch with existing', function() {
         game.players.push(new Player({id:mockMap.iaList[0].id}));
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchPlayers();
 
         expect(game.players.length).to.equal(3);
@@ -40,7 +40,7 @@ describe('Map', function() {
 
 
     it('locate players', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchPlayers();
         map.locatePlayers();
 
@@ -61,11 +61,11 @@ describe('Map', function() {
     });
 
     it('fetchCells', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchCells();
 
-        var firstCase = map.fetchedMap[0];
-        var firstCase2ndRow = map.fetchedMap[map.mapSize.width];
+        var firstCase = map.fetchedMap[0][0];
+        var firstCase2ndRow = map.fetchedMap[1][0];
 
         expect(firstCase.id).to.equal(mockMap.cells[0][0].id);
         expect(firstCase.x).to.equal(0);
@@ -85,26 +85,26 @@ describe('Map', function() {
     });
 
     it('fetchCells2', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchCells();
 
         for (var x = 0; x < map.mapSize.width; x++) {
-            var cell = map.fetchedMap[x];
+            var cell = map.fetchedMap[0][x];
             expect(cell.walls.top).to.be.true;
         }
         for (var y = 0; y < map.mapSize.height; y++) {
-            var cell = map.fetchedMap[y * map.mapSize.height];
+            var cell = map.fetchedMap[y][0];
             expect(cell.walls.left).to.be.true;
         }
 
         for (var y = 0; y < map.mapSize.height; y++) {
-            var cell = map.fetchedMap[y * map.mapSize.height + map.mapSize.width-1];
+            var cell = map.fetchedMap[y][map.mapSize.width-1];
             expect(cell.walls.right).to.be.true;
         }
     });
 
     it('drawCells', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchCells();
         map.fetchPlayers();
         map.drawCells();
