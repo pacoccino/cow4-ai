@@ -39,7 +39,7 @@ Map.prototype.setMap = function(gameMap) {
     }
     */
     for (var y=0; y<this.mapSize.height*this.mapSize.width; y++) {
-        this.fetchedMap.push([]);
+        this.fetchedMap.push({});
     }
 };
 
