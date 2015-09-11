@@ -2,6 +2,7 @@ var mockMap = require('../map.json');
 var Map = require('../modules/map');
 var Player = require('../modules/player');
 var GameController = require('../modules/gamecontroller');
+
 var chai = require('chai');
 var expect = chai.expect;
 
@@ -102,13 +103,26 @@ describe('Map', function() {
             expect(cell.walls.right).to.be.true;
         }
     });
+    it('find adjacents', function() {
+        map.setMap(mockMap);
+        map.fetchCells();
 
-    it('drawCells', function() {
+
+        var firstCase = map.getFetchedCell(0,0);
+        var bottomCase = map.getFetchedCell(0,1);
+        var rightCase = map.getFetchedCell(1,0);
+
+        expect(firstCase.adjacents.length).to.equal(2);
+
+        expect(firstCase.adjacents[0]).to.equal(bottomCase);
+        expect(firstCase.adjacents[1]).to.equal(rightCase);
+    });
+
+    xit('drawMap', function() {
         map.setMap(mockMap);
         map.fetchCells();
         map.fetchPlayers();
-        map.drawCells();
-
+        map.drawMap();
     });
 
 });

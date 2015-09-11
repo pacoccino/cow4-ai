@@ -12,6 +12,8 @@ function Map(game, gameMap) {
     if(gameMap) {
         this.setMap(gameMap);
     }
+
+    this.fetchedMap = [];
 }
 
 Map.prototype.setMap = function(gameMap) {
@@ -24,6 +26,20 @@ Map.prototype.setMap = function(gameMap) {
     this.mapSize = {
         height: this.cells.length,
         width: this.cells[0].length
+    };
+
+
+    this.fetchedMap = [];
+    /*
+    for (var y=0; y<this.mapSize.height; y++) {
+        this.fetchedMap.push([]);
+        for (var x=0; x<this.mapSize.width; x++) {
+            this.fetchedMap[y].push({});
+        }
+    }
+    */
+    for (var y=0; y<this.mapSize.height*this.mapSize.width; y++) {
+        this.fetchedMap.push([]);
     }
 };
 
@@ -104,7 +120,9 @@ Map.prototype.locatePlayers = function() {
 
 };
 
-Map.prototype.fetchCell = function(cell, x, y) {
+Map.prototype.fetchCell = function(cell, x, y, newCell) {
+    var self = this;
+
     var findWays = function(cell) {
         var ways = {
             left: cell.left ? true : false,
@@ -124,55 +142,73 @@ Map.prototype.fetchCell = function(cell, x, y) {
         return walls;
     };
 
-    var myCell = {};
+    var findAdjacents = function(cell) {
+        var adjacents = [];
+        var adjCell;
+
+        if(cell.left) {
+            adjCell = self.getFetchedCell(x-1, y);
+            adjacents.push(adjCell)
+        }
+        if(cell.top) {
+            adjCell = self.getFetchedCell(x, y-1);
+            adjacents.push(adjCell)
+        }
+        if(cell.bottom) {
+            adjCell = self.getFetchedCell(x, y+1);
+            adjacents.push(adjCell)
+        }
+        if(cell.right) {
+            adjCell = self.getFetchedCell(x+1, y);
+            adjacents.push(adjCell)
+        }
+        return adjacents;
+    };
+
+    var myCell = newCell;
     myCell.id = cell.id;
     myCell.ways = findWays(cell);
     myCell.walls = findWalls(cell);
+    myCell.adjacents = findAdjacents(cell);
     myCell.x = x;
     myCell.y = y;
     myCell.occupantId = cell.occupant ? cell.occupant.id : null;
     myCell.isSheep = (cell.occupant && cell.occupant.name === "SheepIA") ? true : false;
     myCell.items = cell.items || [];
-
-    return myCell;
 };
 
 Map.prototype.fetchCells = function() {
-    var matrix = [];
 
     var self = this;
 
     self.forEachCell(function(cell, x, y) {
 
-        var myCell = self.fetchCell.apply(self, [cell, x, y]);
+        var myCell = self.getFetchedCell(x,y);
 
-        matrix.push(myCell);
+        self.fetchCell.apply(self, [cell, x, y, myCell]);
     });
-
-    this.fetchedMap = matrix;
 };
 
 Map.prototype.localteNFetch = function() {
-    var matrix = [];
 
     var self = this;
 
     self.forEachCell(function(cell, x, y) {
 
-        var myCell = self.fetchCell.apply(self, [cell, x, y]);
-        matrix.push(myCell);
+        var myCell = self.getFetchedCell(x,y);
 
+        self.fetchCell.apply(self, [cell, x, y, myCell]);
         self.locatePlayer.apply(self, [cell, x, y]);
     });
-
-    this.fetchedMap = matrix;
 };
 
-Map.prototype.drawCells = function() {
+Map.prototype.drawMap = function() {
 
     if (!this.fetchedMap || this.fetchedMap.length < 1) {
         console.log("nothing to draw");
     }
+
+    process.stdout.write("\n");
 
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var z = 0; z < 2; z++) {
