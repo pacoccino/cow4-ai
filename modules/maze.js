@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var Helpers = require('./helpers');
 
 function Maze(map) {
 
@@ -14,8 +15,7 @@ Maze.prototype.getPath = function(source, destination) {
     if(!source || !destination) return;
 
     var path = [];
-    var visiteds = new Array(this.map.mapSize.height);
-    _.fill(visiteds, new Array(this.map.mapSize.width));
+    var visiteds = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height);
 
     var traverse = function(cell) {
         if(cell === destination) {
