@@ -103,7 +103,7 @@ describe('Map', function() {
         }
     });
     it('find adjacents', function() {
-        map.setMap(mockMap);
+        map.setGameMap(mockMap);
         map.fetchCells();
 
         var firstCase = map.getFetchedCell(0,0);

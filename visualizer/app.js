@@ -34,7 +34,7 @@ app.service("IAVizConnector", function($http) {
 
         return $http(request);
 
-    }
+    };
     return {
         getMap: getMap
     };
