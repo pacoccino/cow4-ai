@@ -22,8 +22,9 @@ describe('Map', function() {
     it('getPaths', function() {
 
 
-        var source = map.getFetchedCell(0,0);
-        var destination = map.getFetchedCell(map.mapSize.width-1, map.mapSize.height-1);
+        var source = map.getPlayerCell(game.players[0].id);
+        var destination = map.getPlayerCell(game.players[1].id);
+
         var paths = maze.getPath(source, destination);
 
         map.drawMap();

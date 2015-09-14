@@ -15,9 +15,19 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
         if(cell.isSheep)
             style.backgroundColor = "red";
 
+        if(cell.isPath)
+            style.backgroundColor = "green";
+
         return style;
     };
 
+    IAVizConnector.getRoute().then(function(data) {
+        var path = data.data;
+        for(var i=0; i<path.length; i++) {
+            var cell = path[i];
+            $scope.map[cell.y][cell.x].isPath = true;
+        }
+    });
 });
 
 app.service("IAVizConnector", function($http) {
@@ -33,9 +43,20 @@ app.service("IAVizConnector", function($http) {
         };
 
         return $http(request);
-
     };
+
+    var getRoute = function() {
+
+        var request = {
+            method: "GET",
+            url:  host + 'getRoute'
+        };
+
+        return $http(request);
+    };
+
     return {
-        getMap: getMap
+        getMap: getMap,
+        getRoute: getRoute
     };
 });

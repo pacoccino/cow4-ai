@@ -1,4 +1,5 @@
 var Player = require('./player');
+var _ = require('lodash');
 
 function Map(game, gameMap) {
     this.game = game;
@@ -36,52 +37,47 @@ Map.prototype.setGameMap = function(gameMap) {
             this.fetchedMap[y].push({});
         }
     }
-    
-    /*for (var y=0; y<this.mapSize.height*this.mapSize.width; y++) {
-        this.fetchedMap.push({});
-    }*/
 };
 
 Map.prototype.getMap = function() {
     return this.fetchedMap;
 };
 
+Map.prototype.getSerializableMap = function() {
+    var serializable = _.cloneDeep(this.fetchedMap);
+
+    for (var y=0; y<this.mapSize.height; y++) {
+        for (var x=0; x<this.mapSize.width; x++) {
+            delete serializable[y][x].adjacents;
+        }
+    }
+    return serializable;
+};
+
+Map.prototype.getPlayerCell = function(playerId) {
+
+    var player = this.game.getPlayerById(playerId);
+    if(player) {
+        var fetchedCell = this.getFetchedCell(player.position.x, player.position.y);
+        return fetchedCell;
+    }
+    else {
+        return null;
+    }
+};
+
 Map.prototype.processMap = function() {
-
-    /*
-     var fs = require('fs');
-     fs.writeFile("map.json", JSON.stringify(gameMap), function(err) {
-     if(err) {
-     return console.log(err);
-     }
-
-     console.log("The file was saved!");
-     });*/
 
     if(this.game.players.length !== 3) {
         this.fetchPlayers();
     }
 
     this.localteNFetch();
-    //this.drawCells();
 };
 
 Map.prototype.getFetchedCell = function(x,y) {
 
     return this.fetchedMap[y][x];
-};
-
-Map.prototype.setFetchedCell = function(myCell, x, y) {
-
-    while(this.fetchedMap.length <= y) {
-        this.fetchedMap.push([]);
-    }
-
-    while(this.fetchedMap[y].length <= x) {
-        this.fetchedMap[y].push({});
-    }
-
-    this.fetchedMap[y][x] = myCell;
 };
 
 Map.prototype.forEachCell = function(fn) {
@@ -199,7 +195,7 @@ Map.prototype.fetchCells = function() {
 
     self.forEachCell(function(cell, x, y) {
 
-        var myCell = self.getFetchedCell(x,y);
+        var myCell = self.getFetchedCell.apply(self, [x,y]);
 
         self.fetchCell.apply(self, [cell, x, y, myCell]);
     });
@@ -211,7 +207,7 @@ Map.prototype.localteNFetch = function() {
 
     self.forEachCell(function(cell, x, y) {
 
-        var myCell = self.getFetchedCell(x,y);
+        var myCell = self.getFetchedCell.apply(self, [x,y]);
 
         self.fetchCell.apply(self, [cell, x, y, myCell]);
         self.locatePlayer.apply(self, [cell, x, y]);

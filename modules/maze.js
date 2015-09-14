@@ -5,24 +5,32 @@ function Maze(map) {
     this.map = map || null;
 }
 
-Maze.prototype.shortestPath = function(source, destination) {
+ Maze.prototype.shortestPath = function(source, destination) {
 };
 
 
 Maze.prototype.getPath = function(source, destination) {
 
+    if(!source || !destination) return;
+
     var path = [];
+    var visiteds = new Array(this.map.mapSize.height);
+    _.fill(visiteds, new Array(this.map.mapSize.width));
+
     var traverse = function(cell) {
         if(cell === destination) {
             return true;
         }
         else {
-            cell.visited = true;
+            visiteds[cell.y][cell.x] = true;
             for (var i = 0; i < cell.adjacents.length; i++) {
                 var adjacent = cell.adjacents[i];
 
-                if(!adjacent.visited && traverse(adjacent)) {
-                    path.push(adjacent);
+                if(!visiteds[adjacent.y][adjacent.x] && traverse(adjacent)) {
+                    path.push({
+                        x: adjacent.x,
+                        y: adjacent.y
+                    });
                     return true;
                 }
             }
@@ -31,7 +39,10 @@ Maze.prototype.getPath = function(source, destination) {
     };
 
     if(traverse(source)) {
-        path.push(source);
+        path.push({
+            x: source.x,
+            y: source.y
+        });
     }
     return path;
 };
@@ -39,8 +50,8 @@ Maze.prototype.getPath = function(source, destination) {
 Maze.prototype.getAllPaths = function(source, destination) {
 
     var path = [];
-    var weights = new Array(map.mapSize.height);
-    _.fill(weights, new Array(map.mapSize.width));
+    var weights = new Array(this.map.mapSize.height);
+    _.fill(weights, new Array(this.map.mapSize.width));
 
     var toVisit = [source];
     var actual;
