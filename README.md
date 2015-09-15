@@ -23,4 +23,19 @@ $ node js/release/Server.js
 ```sh
 $ node client.js
 ```
+
 You need 2 clients for playing game
+
+### Tests
+   
+```sh
+$ mocha tests
+```
+
+### Map visualisation
+   
+```sh
+$ node iadebug.js
+$ chrome http://localhost:1000
+```
+
