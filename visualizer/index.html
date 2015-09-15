@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="IAViz" ng-controller="mainCtrl">
 <head>
-    <title>Duplication Rapports</title>
+    <title>IA Visualisation</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.4/angular.min.js"></script>
@@ -21,7 +21,15 @@
             margin: 0;
             position:absolute;
             box-sizing: border-box;
+            font-weight: 200;
+            font-size: 0.8em;
+            color: cornflowerblue;
+            text-align: center;
         }
+        .legend {
+            font-weight: 700;
+        }
+
     </style>
 
 </head>
@@ -29,10 +37,22 @@
 <div class="container">
     <h1>IAViz</h1>
 
-    <div ng-repeat="row in map" class="row">
-        <div ng-repeat="cell in row" class="cell" ng-style="getCellStyle(cell)">
-
+    <div>
+        <div style="height: 480px">
+            <div ng-repeat="row in map" class="row">
+                <div ng-repeat="cell in row" class="cell" ng-style="getCellStyle(cell)">
+                    {{cell.distance}}
+                </div>
+            </div>
         </div>
+    </div>
+
+    <br/><br/><br/>
+    <div class="legend">
+        <span style="color: green">CHEMIN LE PLUS COURT</span><br/>
+        <span style="color: red">PUTAIN DE POULET</span><br/>
+        <span style="color: blue">JOUEURS</span><br/>
+        <span style="color: #D0D032;">ROUTES ALTERNATIVES</span><br/>
     </div>
 </div>
 </body>

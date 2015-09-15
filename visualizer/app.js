@@ -12,6 +12,24 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
                 $scope.map[cell.y][cell.x].isPath = true;
             }
         });
+        IAVizConnector.getShortPath().then(function(data) {
+            var path = data.data;
+            for(var i=0; i<path.length; i++) {
+                var cell = path[i];
+                $scope.map[cell.y][cell.x].isShortestPath = true;
+            }
+        });
+
+        IAVizConnector.getDistances().then(function(data) {
+            var nodes = data.data;
+            for(var y=0; y<nodes.length; y++) {
+                for (var x = 0; x < nodes[y].length; x++) {
+                    var node = nodes[y][x];
+                    $scope.map[y][x].distance = node;
+                }
+            }
+        });
+
     });
 
     var cellSize = 20;
@@ -22,13 +40,16 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
 
 
         if(cell.isPath)
+            style.backgroundColor = "yellow";
+
+        if(cell.isShortestPath)
             style.backgroundColor = "green";
+
+        if(cell.occupantId)
+            style.backgroundColor = "blue";
 
         if(cell.isSheep)
             style.backgroundColor = "red";
-
-        if(cell.occupantId)
-            style.backgroundColor = "yellow";
 
         style.left = cellSize * cell.x + 'px';
         style.top = cellSize * cell.y + 'px';
@@ -73,9 +94,29 @@ app.service("IAVizConnector", function($http) {
 
         return $http(request);
     };
+    var getDistances = function() {
+
+        var request = {
+            method: "GET",
+            url:  host + 'getDistances'
+        };
+
+        return $http(request);
+    };
+    var getShortPath = function() {
+
+        var request = {
+            method: "GET",
+            url:  host + 'getShortestPath'
+        };
+
+        return $http(request);
+    };
 
     return {
         getMap: getMap,
-        getRoute: getRoute
+        getRoute: getRoute,
+        getDistances: getDistances,
+        getShortPath: getShortPath
     };
 });

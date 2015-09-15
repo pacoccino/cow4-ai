@@ -38,8 +38,33 @@ IAVizRouter.get('/getRoute', function(req, res, next) {
     var source = map.getPlayerCell(game.players[0].id);
     var destination = map.getPlayerCell(game.players[1].id);
 
-    var path = maze.getPath(source, destination);
+    maze.setSource(source);
+    var path = maze.depthFirst(destination);
+
     res.json(path);
+});
+
+IAVizRouter.get('/getDistances', function(req, res, next) {
+
+
+    var source = map.getPlayerCell(game.players[0].id);
+
+    maze.setSource(source);
+    maze.breadthFirst();
+
+    res.json(maze.distances);
+});
+
+IAVizRouter.get('/getShortestPath', function(req, res, next) {
+
+
+    var source = map.getPlayerCell(game.players[0].id);
+    var destination = map.getPlayerCell(game.players[1].id);
+
+    maze.setSource(source);
+    maze.breadthFirst(destination);
+
+    res.json(maze.getSerializablePath());
 });
 
 module.exports = IAVizRouter;

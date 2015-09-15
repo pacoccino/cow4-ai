@@ -10,9 +10,13 @@ Helpers.CreateMatrix = function(width, height, populate) {
     var getCell = function() {
         var cell = null;
 
-        if(populate) {
+        if(populate === true) {
             cell = {};
         }
+        else if(typeof populate === 'function') {
+            cell = populate();
+        }
+
         return cell;
     };
 
