@@ -35,6 +35,6 @@ $ mocha tests
    
 ```sh
 $ node iadebug.js
-$ chrome http://localhost:1000
+$ chrome http://localhost:4000
 ```
 
