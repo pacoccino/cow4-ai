@@ -14,7 +14,8 @@
     "mocha": "^2.3.2"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve":"cd node_modules/codeofwar && node js/release/Server.js"
   },
   "repository": {
     "type": "git",

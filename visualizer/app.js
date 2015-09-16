@@ -72,7 +72,7 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
 
 app.service("IAVizConnector", function($http) {
 
-    var host = "http://localhost:1000/api/";
+    var host = "http://localhost:4000/api/";
 
 
     var getMap = function() {

@@ -14,8 +14,7 @@ $ npm install
 ### Running server
 
 ```sh
-$ cd node_modules/codeofwar/
-$ node js/release/Server.js
+$  npm run serve
 ```
 
 ### Running client
