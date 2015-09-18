@@ -50,6 +50,10 @@ function launchConnection() {
                     console.error('Served went down, stopping');
                     process.exit(0);
                     break;
+                case 'ECONNREFUSED':
+                    console.error('Served connection impossible');
+                    process.exit(0);
+                    break;
                 default:
                     console.error('Unknown socket error : ', e);
             }
