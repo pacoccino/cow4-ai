@@ -25,7 +25,7 @@ GameController.prototype.getPlayerById = function(id) {
 };
 
 GameController.prototype.getSheep = function() {
-    return _.find(this.players, {name:"SheepIA"});
+    return _.find(this.players, {name:'SheepIA'});
 };
 
 GameController.prototype.processIa = function(callback) {
@@ -42,7 +42,7 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
     self.map.setGameMap(gameMap);
     self.map.processMap();
 
-    console.log("New turn : ", self.map.currentTurn);
+    console.log('New turn : ', self.map.currentTurn);
 
     self.processIa(function(actions) {
 

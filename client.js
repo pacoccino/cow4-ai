@@ -1,5 +1,5 @@
 var net = require('net');
-var inquirer = require("inquirer");
+var inquirer = require('inquirer');
 
 var Communication = require('./modules/communication');
 var Config = require('./modules/config');
@@ -18,11 +18,11 @@ var auth = function(callback) {
         var response = data;
         if (response.type && response.type === 'id' && response.id) {
             communication.setId(response.id);
-            console.log("Authentication success, ID: ", response.id);
+            console.log('Authentication success, ID: ', response.id);
             callback && callback();
         }
         else {
-            console.error("Authentication error, exiting");
+            console.error('Authentication error, exiting');
             process.exit(0);
         }
     };
@@ -46,8 +46,8 @@ function launchConnection() {
 
         client.on('error', function(e) {
             switch(e.code) {
-                case "ECONNRESET":
-                    console.error("Served went down, stopping");
+                case 'ECONNRESET':
+                    console.error('Served went down, stopping');
                     process.exit(0);
                     break;
                 default:
@@ -61,7 +61,7 @@ function launchConnection() {
 
     }
     catch(e) {
-        console.error("Unable to connect", e);
+        console.error('Unable to connect', e);
     }
 }
 
@@ -70,9 +70,9 @@ function askIA(callback) {
     if(Config.IAs.length > 1) {
         inquirer.prompt([
           {
-            type: "list",
-            name: "ia",
-            message: "Choose IA to launch",
+            type: 'list',
+            name: 'ia',
+            message: 'Choose IA to launch',
             choices: Config.IAs
           }
         ], function( answers ) {

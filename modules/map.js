@@ -110,7 +110,7 @@ Map.prototype.locatePlayer = function(cell, x, y) {
         var existing = this.game.getPlayerById(cell.occupant.id);
 
         if (!existing) {
-            console.error("Unknown player on the map !");
+            console.error('Unknown player on the map !');
         }
         else {
             existing.position = {
@@ -136,22 +136,20 @@ Map.prototype.fetchCell = function(cell, x, y, newCell) {
     var self = this;
 
     var findWays = function(cell) {
-        var ways = {
+        return {
             left: cell.left ? true : false,
             top: cell.top ? true : false,
             bottom: cell.bottom ? true : false,
             right: cell.right ? true : false
         };
-        return ways;
     };
     var findWalls = function(cell) {
-        var walls = {
+        return {
             left: cell.left ? false : true,
             top: cell.top ? false : true,
             bottom: cell.bottom ? false : true,
             right: cell.right ? false : true
         };
-        return walls;
     };
 
     var findAdjacents = function(cell) {
@@ -185,7 +183,7 @@ Map.prototype.fetchCell = function(cell, x, y, newCell) {
     myCell.x = x;
     myCell.y = y;
     myCell.occupantId = cell.occupant ? cell.occupant.id : null;
-    myCell.isSheep = (cell.occupant && cell.occupant.name === "SheepIA") ? true : false;
+    myCell.isSheep = (cell.occupant && cell.occupant.name === 'SheepIA') ? true : false;
     myCell.items = cell.items || [];
 };
 
@@ -217,10 +215,10 @@ Map.prototype.localteNFetch = function() {
 Map.prototype.drawMap = function() {
 
     if (!this.fetchedMap || this.fetchedMap.length < 1) {
-        console.log("nothing to draw");
+        console.log('nothing to draw');
     }
 
-    process.stdout.write("\n");
+    process.stdout.write('\n');
 
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var z = 0; z < 2; z++) {
@@ -228,44 +226,44 @@ Map.prototype.drawMap = function() {
                 var cell = this.getFetchedCell(x, y);
                 if (z === 0) {
                     if (cell.walls.top)
-                        process.stdout.write(" -");
+                        process.stdout.write(' -');
                     else
-                        process.stdout.write("  ");
+                        process.stdout.write('  ');
                 }
                 else if (z === 1) {
                     if (cell.walls.left)
-                        process.stdout.write("|");
+                        process.stdout.write('|');
                     else
-                        process.stdout.write(" ");
+                        process.stdout.write(' ');
 
                     if (cell.occupantId) {
                         if (cell.isSheep)
-                            process.stdout.write("S");
+                            process.stdout.write('S');
                         else
-                            process.stdout.write("P");
+                            process.stdout.write('P');
                     }
                     else
-                        process.stdout.write(" ");
+                        process.stdout.write(' ');
 
                 }
             }
 
             var cell = this.getFetchedCell(this.mapSize.width-1, y);
             if (z === 1 && cell.walls.right) {
-                process.stdout.write("|");
+                process.stdout.write('|');
             }
-            process.stdout.write("\n");
+            process.stdout.write('\n');
         }
     }
     for (var x = 0; x < this.mapSize.width; x++) {
         var cell = this.getFetchedCell(x, this.mapSize.height-1);
         if (cell.walls.bottom)
-            process.stdout.write(" -");
+            process.stdout.write(' -');
         else
-            process.stdout.write("  ");
+            process.stdout.write('  ');
     }
 
-    process.stdout.write("\n");
+    process.stdout.write('\n');
 
 };
 

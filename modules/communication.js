@@ -1,4 +1,4 @@
-var EOF = "#end#";
+var EOF = '#end#';
 
 function Communication(socket) {
     var self = this;
@@ -27,7 +27,7 @@ function Communication(socket) {
                 self.listener.apply(self.listenerScope, [data]);
             }
             else {
-                console.log("Data received without listener", data);
+                console.log('Data received without listener', data);
             }
             buffer = new Buffer(0);
         }
@@ -45,7 +45,7 @@ Communication.prototype.format = function(message) {
 Communication.prototype.unFormat = function(buffer) {
     var message = buffer.toString();
     if(message.indexOf(EOF) === -1) {
-        console.error("Incorrect message");
+        console.error('Incorrect message');
         return {};
     }
 

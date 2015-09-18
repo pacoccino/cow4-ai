@@ -1,6 +1,6 @@
-var app = angular.module("IAViz", []);
+var app = angular.module('IAViz', []);
 
-app.controller("mainCtrl", function($scope, IAVizConnector) {
+app.controller('mainCtrl', function($scope, IAVizConnector) {
 
     IAVizConnector.getMap().then(function(data) {
         $scope.map = data.data;
@@ -33,23 +33,23 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
     });
 
     var cellSize = 20;
-    var borderType = "2px solid black";
+    var borderType = '2px solid black';
     $scope.getCellStyle = function(cell) {
         var style = {};
 
 
 
         if(cell.isPath)
-            style.backgroundColor = "yellow";
+            style.backgroundColor = 'yellow';
 
         if(cell.isShortestPath)
-            style.backgroundColor = "green";
+            style.backgroundColor = 'green';
 
         if(cell.occupantId)
-            style.backgroundColor = "blue";
+            style.backgroundColor = 'blue';
 
         if(cell.isSheep)
-            style.backgroundColor = "red";
+            style.backgroundColor = 'red';
 
         style.left = cellSize * cell.x + 'px';
         style.top = cellSize * cell.y + 'px';
@@ -70,15 +70,15 @@ app.controller("mainCtrl", function($scope, IAVizConnector) {
 
 });
 
-app.service("IAVizConnector", function($http) {
+app.service('IAVizConnector', function($http) {
 
-    var host = "http://localhost:4000/api/";
+    var host = 'http://localhost:4000/api/';
 
 
     var getMap = function() {
 
         var request = {
-            method: "GET",
+            method: 'GET',
             url:  host + 'getMap'
         };
 
@@ -88,7 +88,7 @@ app.service("IAVizConnector", function($http) {
     var getRoute = function() {
 
         var request = {
-            method: "GET",
+            method: 'GET',
             url:  host + 'getRoute'
         };
 
@@ -97,7 +97,7 @@ app.service("IAVizConnector", function($http) {
     var getDistances = function() {
 
         var request = {
-            method: "GET",
+            method: 'GET',
             url:  host + 'getDistances'
         };
 
@@ -106,7 +106,7 @@ app.service("IAVizConnector", function($http) {
     var getShortPath = function() {
 
         var request = {
-            method: "GET",
+            method: 'GET',
             url:  host + 'getShortestPath'
         };
 

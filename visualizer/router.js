@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 var express = require('express');
 var IAVizRouter = express.Router({ params: 'inherit' });
 var _ = require('lodash');
@@ -19,7 +19,7 @@ map.localteNFetch();
 maze = new Maze(map);
 
 IAVizRouter.get('/', function(req, res, next) {
-    res.send("api ok");
+    res.send('api ok');
 });
 
 IAVizRouter.get('/getMap', function(req, res, next) {
