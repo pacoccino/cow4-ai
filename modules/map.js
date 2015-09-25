@@ -7,8 +7,6 @@ function Map(game, gameMap) {
 
     this.gameMap = null;
 
-    this.currentTurn = 0;
-
     this.fetchedMap = [];
 
     if(gameMap) {
@@ -18,8 +16,6 @@ function Map(game, gameMap) {
 
 Map.prototype.setGameMap = function(gameMap) {
     this.gameMap = gameMap;
-
-    this.currentTurn = this.gameMap.currentTurn;
 
     this.mapSize = {
         height: this.gameMap.cells.length,
