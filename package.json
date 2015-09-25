@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve":"cd node_modules/codeofwar && node js/release/Server.js"
+    "serve": "cd node_modules/codeofwar && node js/release/Server.js"
   },
   "repository": {
     "type": "git",

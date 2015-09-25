@@ -14,8 +14,6 @@ var game, map, maze;
 game = new GameController({});
 map = new Map(game);
 map.setGameMap(mockMap);
-map.fetchPlayers();
-map.localteNFetch();
 maze = new Maze(map);
 
 IAVizRouter.get('/', function(req, res, next) {

@@ -1,4 +1,5 @@
 var Player = require('./player');
+var Helpers = require('./helpers');
 var _ = require('lodash');
 
 function Map(game, gameMap) {
@@ -7,8 +8,6 @@ function Map(game, gameMap) {
     this.gameMap = null;
 
     this.currentTurn = 0;
-    this.iaList = [];
-    this.cells = [];
 
     this.fetchedMap = [];
 
@@ -21,26 +20,36 @@ Map.prototype.setGameMap = function(gameMap) {
     this.gameMap = gameMap;
 
     this.currentTurn = this.gameMap.currentTurn;
-    this.iaList = this.gameMap.iaList;
-    this.cells = this.gameMap.cells;
 
     this.mapSize = {
-        height: this.cells.length,
-        width: this.cells[0].length
+        height: this.gameMap.cells.length,
+        width: this.gameMap.cells[0].length
     };
 
-    this.fetchedMap = [];
-    
-    for (var y=0; y<this.mapSize.height; y++) {
-        this.fetchedMap.push([]);
-        for (var x=0; x<this.mapSize.width; x++) {
-            this.fetchedMap[y].push({});
-        }
-    }
+    this.fetchedMap = Helpers.CreateMatrix(this.mapSize.width, this.mapSize.height, true);
+
+    this.processGameMap();
 };
 
 Map.prototype.getMap = function() {
     return this.fetchedMap;
+};
+
+Map.prototype.getCell = function(x,y) {
+
+    return this.fetchedMap[y][x];
+};
+
+Map.prototype.getPlayerCell = function(playerId) {
+
+    var player = this.game.getPlayerById(playerId);
+    if(player) {
+        var fetchedCell = this.getCell(player.position.x, player.position.y);
+        return fetchedCell;
+    }
+    else {
+        return null;
+    }
 };
 
 Map.prototype.getSerializableMap = function() {
@@ -54,44 +63,35 @@ Map.prototype.getSerializableMap = function() {
     return serializable;
 };
 
-Map.prototype.getPlayerCell = function(playerId) {
-
-    var player = this.game.getPlayerById(playerId);
-    if(player) {
-        var fetchedCell = this.getFetchedCell(player.position.x, player.position.y);
-        return fetchedCell;
-    }
-    else {
-        return null;
-    }
-};
-
-Map.prototype.processMap = function() {
+Map.prototype.processGameMap = function() {
 
     if(this.game.players.length !== 3) {
         this.fetchPlayers();
     }
 
-    this.localteNFetch();
-};
+    var self = this;
 
-Map.prototype.getFetchedCell = function(x,y) {
+    self.forEachCell(function(cell, x, y) {
 
-    return this.fetchedMap[y][x];
+        var myCell = self.getCell.apply(self, [x,y]);
+
+        self.fetchCell.apply(self, [cell, x, y, myCell]);
+        self.locatePlayer.apply(self, [cell, x, y]);
+    });
 };
 
 Map.prototype.forEachCell = function(fn) {
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var x = 0; x < this.mapSize.height; x++) {
-            fn(this.cells[y][x], x, y);
+            fn(this.gameMap.cells[y][x], x, y);
         }
     }
 };
 
 Map.prototype.fetchPlayers = function() {
 
-    for (var i = 0; i < this.iaList.length; i++) {
-        var player = this.iaList[i];
+    for (var i = 0; i < this.gameMap.iaList.length; i++) {
+        var player = this.gameMap.iaList[i];
 
         var existing = this.game.getPlayerById(player.id);
         if(!existing) {
@@ -122,16 +122,6 @@ Map.prototype.locatePlayer = function(cell, x, y) {
     }
 };
 
-Map.prototype.locatePlayers = function() {
-
-    var self = this;
-
-    self.forEachCell(function(cell, x, y) {
-        self.locatePlayer.apply(self, [cell, x, y]);
-    });
-
-};
-
 Map.prototype.fetchCell = function(cell, x, y, newCell) {
     var self = this;
 
@@ -157,19 +147,19 @@ Map.prototype.fetchCell = function(cell, x, y, newCell) {
         var adjCell;
 
         if(cell.left) {
-            adjCell = self.getFetchedCell(x-1, y);
+            adjCell = self.getCell(x-1, y);
             adjacents.push(adjCell)
         }
         if(cell.top) {
-            adjCell = self.getFetchedCell(x, y-1);
+            adjCell = self.getCell(x, y-1);
             adjacents.push(adjCell)
         }
         if(cell.bottom) {
-            adjCell = self.getFetchedCell(x, y+1);
+            adjCell = self.getCell(x, y+1);
             adjacents.push(adjCell)
         }
         if(cell.right) {
-            adjCell = self.getFetchedCell(x+1, y);
+            adjCell = self.getCell(x+1, y);
             adjacents.push(adjCell)
         }
         return adjacents;
@@ -187,31 +177,6 @@ Map.prototype.fetchCell = function(cell, x, y, newCell) {
     myCell.items = cell.items || [];
 };
 
-Map.prototype.fetchCells = function() {
-
-    var self = this;
-
-    self.forEachCell(function(cell, x, y) {
-
-        var myCell = self.getFetchedCell.apply(self, [x,y]);
-
-        self.fetchCell.apply(self, [cell, x, y, myCell]);
-    });
-};
-
-Map.prototype.localteNFetch = function() {
-
-    var self = this;
-
-    self.forEachCell(function(cell, x, y) {
-
-        var myCell = self.getFetchedCell.apply(self, [x,y]);
-
-        self.fetchCell.apply(self, [cell, x, y, myCell]);
-        self.locatePlayer.apply(self, [cell, x, y]);
-    });
-};
-
 Map.prototype.drawMap = function() {
 
     if (!this.fetchedMap || this.fetchedMap.length < 1) {
@@ -223,7 +188,7 @@ Map.prototype.drawMap = function() {
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var z = 0; z < 2; z++) {
             for (var x = 0; x < this.mapSize.width; x++) {
-                var cell = this.getFetchedCell(x, y);
+                var cell = this.getCell(x, y);
                 if (z === 0) {
                     if (cell.walls.top)
                         process.stdout.write(' -');
@@ -248,7 +213,7 @@ Map.prototype.drawMap = function() {
                 }
             }
 
-            var cell = this.getFetchedCell(this.mapSize.width-1, y);
+            var cell = this.getCell(this.mapSize.width-1, y);
             if (z === 1 && cell.walls.right) {
                 process.stdout.write('|');
             }
@@ -256,7 +221,7 @@ Map.prototype.drawMap = function() {
         }
     }
     for (var x = 0; x < this.mapSize.width; x++) {
-        var cell = this.getFetchedCell(x, this.mapSize.height-1);
+        var cell = this.getCell(x, this.mapSize.height-1);
         if (cell.walls.bottom)
             process.stdout.write(' -');
         else

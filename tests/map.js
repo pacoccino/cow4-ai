@@ -16,7 +16,6 @@ describe('Map', function() {
 
     it('fetch players', function() {
         map.setGameMap(mockMap);
-        map.fetchPlayers();
 
         expect(game.players.length).to.equal(3);
         expect(game.players[0].id).to.equal(mockMap.iaList[0].id);
@@ -30,7 +29,6 @@ describe('Map', function() {
     it('fetch with existing', function() {
         game.players.push(new Player({id:mockMap.iaList[0].id}));
         map.setGameMap(mockMap);
-        map.fetchPlayers();
 
         expect(game.players.length).to.equal(3);
         expect(game.players[0].id).to.equal(mockMap.iaList[0].id);
@@ -41,8 +39,6 @@ describe('Map', function() {
 
     it('locate players', function() {
         map.setGameMap(mockMap);
-        map.fetchPlayers();
-        map.locatePlayers();
 
         expect(game.players.length).to.equal(3);
         expect(game.players[0].position.id).not.to.equal(0);
@@ -62,7 +58,6 @@ describe('Map', function() {
 
     it('fetchCells', function() {
         map.setGameMap(mockMap);
-        map.fetchCells();
 
         var firstCase = map.fetchedMap[0][0];
         var firstCase2ndRow = map.fetchedMap[1][0];
@@ -86,7 +81,6 @@ describe('Map', function() {
 
     it('fetchCells2', function() {
         map.setGameMap(mockMap);
-        map.fetchCells();
 
         for (var x = 0; x < map.mapSize.width; x++) {
             var cell = map.fetchedMap[0][x];
@@ -104,11 +98,10 @@ describe('Map', function() {
     });
     it('find adjacents', function() {
         map.setGameMap(mockMap);
-        map.fetchCells();
 
-        var firstCase = map.getFetchedCell(0,0);
-        var bottomCase = map.getFetchedCell(0,1);
-        var rightCase = map.getFetchedCell(1,0);
+        var firstCase = map.getCell(0,0);
+        var bottomCase = map.getCell(0,1);
+        var rightCase = map.getCell(1,0);
 
         expect(firstCase.adjacents.length).to.equal(2);
 
@@ -118,8 +111,6 @@ describe('Map', function() {
 
     xit('drawMap', function() {
         map.setGameMap(mockMap);
-        map.fetchCells();
-        map.fetchPlayers();
         map.drawMap();
 
     });
