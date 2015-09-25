@@ -24,7 +24,7 @@ GameController.prototype.getPlayerById = function(id) {
 
 GameController.prototype.getMe = function() {
     if(!this._p.me) {
-        this._p.me = _.find(this.players, {id:self.communication.getId()});
+        this._p.me = _.find(this.players, {id:this.communication.getId()});
     }
     return this._p.me;
 };
@@ -32,7 +32,7 @@ GameController.prototype.getEnnemy = function() {
     if(!this._p.ennemy) {
         for (var i = 0; i < this.players.length; i++) {
             var player = this.players[i];
-            if (player.id !== self.communication.getId() && player.name !== 'SheepIA') {
+            if (player.id !== this.communication.getId() && player.name !== 'SheepIA') {
                 this._p.ennemy = player;
             }
         }

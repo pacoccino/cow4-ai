@@ -3,7 +3,6 @@ var Maze = require('./maze');
 function IA(gameController) {
     this.game = gameController;
     this.map = this.game.map;
-
 }
 
 IA.prototype.getActions = function(callback) {
@@ -26,7 +25,7 @@ IA.prototype.getActions = function(callback) {
             var cell = maze.shortPath[i];
             var action = {};
 
-            actions.push(action);
+            //actions.push(action);
         }
     }
 
