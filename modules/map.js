@@ -61,9 +61,7 @@ Map.prototype.getSerializableMap = function() {
 
 Map.prototype.processGameMap = function() {
 
-    if(this.game.players.length !== 3) {
-        this.fetchPlayers();
-    }
+    this.fetchPlayers();
 
     var self = this;
 
