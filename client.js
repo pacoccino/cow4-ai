@@ -10,8 +10,10 @@ var communication;
 var auth = function(callback) {
     var request = {
         type:'authenticate',
-        name: Config.myId.name,
-        avatar: Config.myId.avatar
+        name: Config.profile.name,
+        avatar: Config.profile.avatar,
+        token: Config.profile.token,
+        profil: Config.profile.profil
     };
 
     var authListener = function(data) {
@@ -71,7 +73,7 @@ function launchConnection() {
 
 function askIA(callback) {
 
-    if(Config.IAs.length > 1) {
+    if(!Config.IA && Config.IAs.length > 1) {
         inquirer.prompt([
           {
             type: 'list',
@@ -80,11 +82,12 @@ function askIA(callback) {
             choices: Config.IAs
           }
         ], function( answers ) {
+            Config.IA = answers[0];
             callback(answers[0]);
         });
     }
     else {
-        callback(Config.IAs[0].value);
+        callback(Config.IAs[Config.IA].value);
     }
 }
 
