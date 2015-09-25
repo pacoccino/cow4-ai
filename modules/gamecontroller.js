@@ -11,21 +11,39 @@ var GameController = function(communication) {
     this.map = new Map(this);
     this.ia = new IA(this);
 
-    /*
-    this.myPlayer = new Player();
-    this.myPlayer.id = this.communication.getId();
-    this.myPlayer.name = Config.name;
-    this.myPlayer.avatar = Config.avatar;
+    this.currentTurn = 0;
 
-    this.players.push(this.myPlayer);*/
+    this.benchMark = [];
+
+    this._p = {};
 };
 
 GameController.prototype.getPlayerById = function(id) {
     return _.find(this.players, {id:id});
 };
 
+GameController.prototype.getMe = function() {
+    if(!this._p.me) {
+        this._p.me = _.find(this.players, {id:self.communication.getId()});
+    }
+    return this._p.me;
+};
+GameController.prototype.getEnnemy = function() {
+    if(!this._p.ennemy) {
+        for (var i = 0; i < this.players.length; i++) {
+            var player = this.players[i];
+            if (player.id !== self.communication.getId() && player.name !== 'SheepIA') {
+                this._p.ennemy = player;
+            }
+        }
+    }
+    return this._p.ennemy;
+};
 GameController.prototype.getSheep = function() {
-    return _.find(this.players, {name:'SheepIA'});
+    if(!this._p.sheep) {
+        this._p.sheep =  _.find(this.players, {name: 'SheepIA'});
+    }
+    return this._p.sheep;
 };
 
 GameController.prototype.processIa = function(callback) {
@@ -40,12 +58,14 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
     var self = this;
 
     self.map.setGameMap(gameMap);
+    this.currentTurn = gameMap.currentTurn;
 
-    console.log('New turn : ', self.map.currentTurn);
+    console.log('New turn : ', self.currentTurn);
+    var bench = Date.now();
 
     self.processIa(function(actions) {
 
-        var IAinfo = self.getPlayerById(self.communication.getId());
+        var IAinfo = self.getPlayerById(self.communication.getId()).toPublic();
 
         var response = {
             type: 'turnResult',
@@ -53,6 +73,11 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
             actions: actions
         };
 
+        var time = Date.now() - bench;
+        self.benchMark.push(time);
+        var avg = _.round(_.sum(self.benchMark)/self.benchMark.length);
+
+        console.log('Turn computed, took', time, "ms, average " + avg + "ms.");
         callback(response);
     });
 };
