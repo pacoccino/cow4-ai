@@ -1,4 +1,7 @@
 var Maze = require('./maze');
+var Action = require('./action');
+
+var sendDelay = 10;
 
 function IA(gameController) {
     this.game = gameController;
@@ -11,7 +14,7 @@ IA.prototype.getActions = function(callback) {
 
     var actions = [];
     var me = this.game.getMe();
-    var ennemy = this.game.getMe();
+    var ennemy = this.game.getEnnemy();
     var sheep = this.game.getSheep();
 
     var source = this.map.getCell(me.position.x, me.position.y);
@@ -22,17 +25,18 @@ IA.prototype.getActions = function(callback) {
 
     if(maze.shortPath) {
         for(var i=0; i<me.pm; i++) {
-            var cell = maze.shortPath[i];
-            var action = {};
+            var cell = maze.shortPath[i+1];
+            var action = new Action();
+            action.move(cell.id);
 
-            //actions.push(action);
+            actions.push(action.getServerAction());
         }
     }
 
     setTimeout(function() {
 
         callback(actions);
-    }, 100);
+    }, sendDelay);
 };
 
 module.exports = IA;

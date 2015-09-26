@@ -28,6 +28,7 @@ GameController.prototype.getMe = function() {
     }
     return this._p.me;
 };
+
 GameController.prototype.getEnnemy = function() {
     if(!this._p.ennemy) {
         for (var i = 0; i < this.players.length; i++) {
@@ -39,6 +40,7 @@ GameController.prototype.getEnnemy = function() {
     }
     return this._p.ennemy;
 };
+
 GameController.prototype.getSheep = function() {
     if(!this._p.sheep) {
         this._p.sheep =  _.find(this.players, {name: 'SheepIA'});
@@ -91,11 +93,13 @@ GameController.prototype.listenGame = function(data) {
             self.communication.send(turnOrder);
         });
     }
+    else {
+        console.log("Message reçu inconnu:", data)
+    }
 };
 
 GameController.prototype.listen = function() {
     this.communication.setListener(this.listenGame, this);
 };
-
 
 module.exports = GameController;
