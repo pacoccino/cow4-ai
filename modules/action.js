@@ -20,6 +20,11 @@ Action.prototype.useItem = function(itemType) {
 
 Action.prototype.getServerAction = function() {
 
+    if(!this.type) {
+        console.log('Please set an action before');
+        return;
+    }
+
     var serverAction = {};
     switch(this.type) {
         case 'move':
@@ -42,6 +47,10 @@ Action.prototype.getServerAction = function() {
 
 Action.prototype.executeOnMap = function(map, player) {
 
+    if(!this.type) {
+        console.log('Please set an action before');
+        return;
+    }
     switch(this.type) {
         case 'move':
             executeMove(this.value, map, player);
