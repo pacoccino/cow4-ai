@@ -23,12 +23,21 @@ describe('Action', function() {
     });
 
 
-    it('get server action', function() {
+    it('get server action move', function() {
         action.move(12);
 
         var serverAction = action.getServerAction();
 
         expect(serverAction.type).to.equal('move');
         expect(serverAction.target).to.equal(12);
+    });
+
+    it('get server action use item', function() {
+        action.useItem(12);
+
+        var serverAction = action.getServerAction();
+
+        expect(serverAction.type).to.equal('useItem');
+        expect(serverAction.item.type).to.equal(12);
     });
 });

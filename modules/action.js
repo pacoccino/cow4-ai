@@ -12,7 +12,7 @@ Action.prototype.getItem = function() {
     this.type = 'getItem';
 };
 Action.prototype.useItem = function(itemType) {
-    this.type = 'userItem';
+    this.type = 'useItem';
     this.value = itemType;
 };
 
