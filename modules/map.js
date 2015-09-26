@@ -36,6 +36,22 @@ Map.prototype.getCell = function(x,y) {
     return this.fetchedMap[y][x];
 };
 
+Map.prototype.getCellById = function(cellId) {
+
+    var map = this.getMap();
+
+    for (var y = 0; y < map.length; y++) {
+        var row = map[y];
+
+        var cell = _.find(row, {id:cellId});
+        if(cell) {
+            return cell;
+        }
+    }
+
+    return null;
+};
+
 Map.prototype.getPlayerCell = function(playerId) {
 
     var player = this.game.getPlayerById(playerId);
