@@ -1,8 +1,11 @@
+var mockMap = require('../map.json');
+var Map = require('../modules/map');
+var GameController = require('../modules/gamecontroller');
 var Action = require('../modules/action');
 var chai = require('chai');
 var expect = chai.expect;
 
-var action
+var action;
 
 describe('Action', function() {
 
@@ -39,5 +42,19 @@ describe('Action', function() {
 
         expect(serverAction.type).to.equal('useItem');
         expect(serverAction.item.type).to.equal(12);
+    });
+
+    it('executes move', function() {
+        var game = new GameController({});
+        var map = new Map(game);
+        map.setGameMap(mockMap);
+
+        action.move(mockMap.cells[0][1].id);
+
+        var player = game.players[0];
+        action.executeOnMap(map, player);
+
+        expect(map.getCell(0, 0).occupantId).to.be.null;
+        expect(map.getCell(1, 0).occupantId).to.equal(player.id);
     });
 });

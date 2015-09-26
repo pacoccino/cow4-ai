@@ -14,6 +14,33 @@ describe('Map', function() {
         map = new Map(game);
     });
 
+    it('get cell', function() {
+        map.setGameMap(mockMap);
+
+        // (x,y)
+        var cell = map.getCell(0,0);
+        // map[y][x]
+        expect(cell).to.equal(map.fetchedMap[0][0]);
+
+        var cellB = map.getCell(1,0);
+        expect(cellB).to.equal(map.fetchedMap[0][1]);
+
+        var cellC = map.getCell(0,1);
+        expect(cellC).to.equal(map.fetchedMap[1][0]);
+
+        var cellD = map.getCell(1,1);
+        expect(cellD).to.equal(map.fetchedMap[1][1]);
+    });
+
+    it('get cell by id', function() {
+        map.setGameMap(mockMap);
+
+
+        var cell = map.getCellById(mockMap.cells[0][0].id);
+
+        expect(cell).to.equal(map.fetchedMap[0][0]);
+    });
+
     it('fetch players', function() {
         map.setGameMap(mockMap);
 
@@ -96,7 +123,6 @@ describe('Map', function() {
             expect(cell.walls.right).to.be.true;
         }
     });
-
     it('find adjacents', function() {
         map.setGameMap(mockMap);
 

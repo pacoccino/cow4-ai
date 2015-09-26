@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 function Action() {
     this.type = null;
     this.value = null;
@@ -12,11 +14,16 @@ Action.prototype.getItem = function() {
     this.type = 'getItem';
 };
 Action.prototype.useItem = function(itemType) {
-    this.type = 'useItem';
+    this.type = 'userItem';
     this.value = itemType;
 };
 
 Action.prototype.getServerAction = function() {
+
+    if(!this.type) {
+        console.log('Please set an action before');
+        return;
+    }
 
     var serverAction = {};
     switch(this.type) {
@@ -36,6 +43,42 @@ Action.prototype.getServerAction = function() {
     }
 
     return serverAction;
+};
+
+Action.prototype.executeOnMap = function(map, player) {
+
+    if(!this.type) {
+        console.log('Please set an action before');
+        return;
+    }
+    switch(this.type) {
+        case 'move':
+            executeMove(this.value, map, player);
+            break;
+    }
+};
+
+var executeMove = function(target, map, player) {
+    var fromCell = map.getCell(player.position.x, player.position.y);
+    var destCell = map.getCellById(target);
+
+    if(player.id !== fromCell.occupantId) {
+        console.log('wrong move execution, player is not here');
+        return;
+    }
+    if(destCell.occupantId !== null) {
+        console.log('wrong move execution, cell is occuped');
+        return;
+    }
+
+    var adjacent = _.find(fromCell.adjacents, destCell);
+    if(!adjacent) {
+        console.log('wrong move execution, cells are not adjacents');
+        return;
+    }
+
+    fromCell.occupantId = null;
+    destCell.occupantId = player.id;
 };
 
 module.exports = Action;
