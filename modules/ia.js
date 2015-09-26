@@ -26,6 +26,12 @@ IA.prototype.getActions = function(callback) {
     if(maze.shortPath) {
         for(var i=0; i<me.pm; i++) {
             var cell = maze.shortPath[i+1];
+
+            // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
+            if(cell.occupantId !== null) {
+                break;
+            }
+
             var action = new Action();
             action.move(cell.id);
 
