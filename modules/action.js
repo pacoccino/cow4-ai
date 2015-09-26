@@ -9,8 +9,13 @@ Action.prototype.move = function(cellId) {
 };
 
 Action.prototype.getItem = function() {
-
+    this.type = 'getItem';
 };
+Action.prototype.useItem = function(itemType) {
+    this.type = 'userItem';
+    this.value = itemType;
+};
+
 Action.prototype.getServerAction = function() {
 
     var serverAction = {};
@@ -18,6 +23,15 @@ Action.prototype.getServerAction = function() {
         case 'move':
             serverAction.type = 'move';
             serverAction.target = this.value;
+            break;
+        case 'getItem':
+            serverAction.type = 'getItem';
+            break;
+        case 'useItem':
+            serverAction.type = 'useItem';
+            serverAction.item = {
+                type: this.value
+            };
             break;
     }
 
