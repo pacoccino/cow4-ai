@@ -8,15 +8,14 @@ Action.prototype.move = function(cellId) {
     this.value = cellId;
 };
 
-// mal implementé, pour l'exemple
-Action.prototype.getItem = function(itemId) {
-    this.type = 'getItem';
-    this.value = itemId;
-};
-
 Action.prototype.getItem = function() {
-
+    this.type = 'getItem';
 };
+Action.prototype.useItem = function(itemType) {
+    this.type = 'userItem';
+    this.value = itemType;
+};
+
 Action.prototype.getServerAction = function() {
 
     var serverAction = {};
@@ -24,6 +23,15 @@ Action.prototype.getServerAction = function() {
         case 'move':
             serverAction.type = 'move';
             serverAction.target = this.value;
+            break;
+        case 'getItem':
+            serverAction.type = 'getItem';
+            break;
+        case 'useItem':
+            serverAction.type = 'useItem';
+            serverAction.item = {
+                type: this.value
+            };
             break;
     }
 
