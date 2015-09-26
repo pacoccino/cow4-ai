@@ -1,5 +1,13 @@
 function Cell() {
-
+    this.id = null;
+    this.ways = {};
+    this.walls = {};
+    this.adjacents = [];
+    this.x = 0;
+    this.y = 0;
+    this.occupantId = null;
+    this.isSheep = false;
+    this.items = [];
 }
 
 Cell.getNew = function() {
