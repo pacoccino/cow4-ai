@@ -96,6 +96,7 @@ describe('Map', function() {
             expect(cell.walls.right).to.be.true;
         }
     });
+
     it('find adjacents', function() {
         map.setGameMap(mockMap);
 

@@ -1,5 +1,6 @@
 var Player = require('./player');
 var Helpers = require('./helpers');
+var Cell = require('./cell');
 var _ = require('lodash');
 
 function Map(game, gameMap) {
@@ -22,7 +23,7 @@ Map.prototype.setGameMap = function(gameMap) {
         width: this.gameMap.cells[0].length
     };
 
-    this.fetchedMap = Helpers.CreateMatrix(this.mapSize.width, this.mapSize.height, true);
+    this.fetchedMap = Helpers.CreateMatrix(this.mapSize.width, this.mapSize.height, Cell.getNew);
 
     this.processGameMap();
 };
@@ -69,7 +70,7 @@ Map.prototype.processGameMap = function() {
 
         var myCell = self.getCell.apply(self, [x,y]);
 
-        self.fetchCell.apply(self, [cell, x, y, myCell]);
+        myCell.fetchServerCell.apply(myCell, [cell, x, y, self]);
         self.locatePlayer.apply(self, [cell, x, y]);
     });
 };
@@ -114,61 +115,6 @@ Map.prototype.locatePlayer = function(cell, x, y) {
             };
         }
     }
-};
-
-Map.prototype.fetchCell = function(cell, x, y, newCell) {
-    var self = this;
-
-    var findWays = function(cell) {
-        return {
-            left: cell.left ? true : false,
-            top: cell.top ? true : false,
-            bottom: cell.bottom ? true : false,
-            right: cell.right ? true : false
-        };
-    };
-    var findWalls = function(cell) {
-        return {
-            left: cell.left ? false : true,
-            top: cell.top ? false : true,
-            bottom: cell.bottom ? false : true,
-            right: cell.right ? false : true
-        };
-    };
-
-    var findAdjacents = function(cell) {
-        var adjacents = [];
-        var adjCell;
-
-        if(cell.left) {
-            adjCell = self.getCell(x-1, y);
-            adjacents.push(adjCell)
-        }
-        if(cell.top) {
-            adjCell = self.getCell(x, y-1);
-            adjacents.push(adjCell)
-        }
-        if(cell.bottom) {
-            adjCell = self.getCell(x, y+1);
-            adjacents.push(adjCell)
-        }
-        if(cell.right) {
-            adjCell = self.getCell(x+1, y);
-            adjacents.push(adjCell)
-        }
-        return adjacents;
-    };
-
-    var myCell = newCell;
-    myCell.id = cell.id;
-    myCell.ways = findWays(cell);
-    myCell.walls = findWalls(cell);
-    myCell.adjacents = findAdjacents(cell);
-    myCell.x = x;
-    myCell.y = y;
-    myCell.occupantId = cell.occupant ? cell.occupant.id : null;
-    myCell.isSheep = (cell.occupant && cell.occupant.name === 'SheepIA') ? true : false;
-    myCell.items = cell.items || [];
 };
 
 Map.prototype.drawMap = function() {
