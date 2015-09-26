@@ -38,4 +38,8 @@ Action.prototype.getServerAction = function() {
     return serverAction;
 };
 
+Action.prototype.executeOnMap = function(map) {
+
+};
+
 module.exports = Action;
