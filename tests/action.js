@@ -26,7 +26,7 @@ describe('Action', function() {
     });
 
 
-    it('get server action', function() {
+    it('get server action move', function() {
         action.move(12);
 
         var serverAction = action.getServerAction();
