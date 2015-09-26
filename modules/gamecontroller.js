@@ -1,6 +1,5 @@
-var Config = require('./config');
+var Constants = require('./constants');
 var Map = require('./map');
-var Player = require('./player');
 var IA = require('./ia');
 var _ = require('lodash');
 
@@ -33,7 +32,7 @@ GameController.prototype.getEnnemy = function() {
     if(!this._p.ennemy) {
         for (var i = 0; i < this.players.length; i++) {
             var player = this.players[i];
-            if (player.id !== this.communication.getId() && player.name !== 'SheepIA') {
+            if (player.id !== this.communication.getId() && player.name !== Constants.SheepName) {
                 this._p.ennemy = player;
             }
         }

@@ -1,5 +1,7 @@
 var Constants = {};
 
+Constants.SheepName = 'SheepIA';
+
 Constants.GAME_MAX_NUM_TURN = 200;
 Constants.TIMEOUT_DURATION = 2*1000;
 Constants.INVISIBILITY_DURATION = 42;

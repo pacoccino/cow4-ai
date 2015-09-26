@@ -28,7 +28,7 @@ IA.prototype.getActions = function(callback) {
             var cell = maze.shortPath[i+1];
 
             // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
-            if(cell.occupantId !== null) {
+            if(cell.occupantId !== null && cell.occupantId !== sheep.id) {
                 break;
             }
 
