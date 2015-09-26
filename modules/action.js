@@ -8,6 +8,12 @@ Action.prototype.move = function(cellId) {
     this.value = cellId;
 };
 
+// mal implementé, pour l'exemple
+Action.prototype.getItem = function(itemId) {
+    this.type = 'getItem';
+    this.value = itemId;
+};
+
 Action.prototype.getItem = function() {
 
 };
