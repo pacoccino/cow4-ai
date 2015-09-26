@@ -35,6 +35,15 @@ describe('Action', function() {
         expect(serverAction.target).to.equal(12);
     });
 
+    it('get server action use item', function() {
+        action.useItem(12);
+
+        var serverAction = action.getServerAction();
+
+        expect(serverAction.type).to.equal('useItem');
+        expect(serverAction.item.type).to.equal(12);
+    });
+
     it('executes move', function() {
         var game = new GameController({});
         var map = new Map(game);
