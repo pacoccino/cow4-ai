@@ -35,6 +35,14 @@ describe('Action', function() {
         expect(serverAction.target).to.equal(12);
     });
 
+    it('get server action get item', function() {
+        action.getItem();
+
+        var serverAction = action.getServerAction();
+
+        expect(serverAction.type).to.equal('getItem');
+    });
+
     it('get server action use item', function() {
         action.useItem(12);
 
