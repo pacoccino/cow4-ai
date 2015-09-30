@@ -83,10 +83,10 @@ Map.prototype.processGameMap = function() {
 
     self.forEachCell(function(cell, x, y) {
 
-        var myCell = self.getCell.apply(self, [x,y]);
+        var myCell = self.getCell(x,y);
 
-        self.fetchCell.apply(self, [cell, x, y, myCell]);
-        self.locatePlayer.apply(self, [cell, x, y]);
+        self.fetchCell(cell, x, y, myCell);
+        self.locatePlayer(cell, x, y);
     });
 };
 
