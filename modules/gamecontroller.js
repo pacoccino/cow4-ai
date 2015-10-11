@@ -10,8 +10,6 @@ var GameController = function(communication) {
 
     this.ia = new IA(this.gamestate);
 
-    this.currentTurn = 0;
-
     this.benchMark = [];
 };
 

@@ -45,7 +45,7 @@ Action.prototype.getServerAction = function() {
     return serverAction;
 };
 
-Action.prototype.executeOnMap = function(map, player) {
+Action.prototype.executeOnGamestate = function(gamestate, player) {
 
     if(!this.type) {
         console.log('Please set an action before');
@@ -53,14 +53,14 @@ Action.prototype.executeOnMap = function(map, player) {
     }
     switch(this.type) {
         case 'move':
-            executeMove(this.value, map, player);
+            executeMove(this.value, gamestate, player);
             break;
     }
 };
 
-var executeMove = function(target, map, player) {
-    var fromCell = map.getCell(player.position.x, player.position.y);
-    var destCell = map.getCellById(target);
+var executeMove = function(target, gamestate, player) {
+    var fromCell = gamestate.getCell(player.position.x, player.position.y);
+    var destCell = gamestate.getCellById(target);
 
     if(player.id !== fromCell.occupantId) {
         console.log('wrong move execution, player is not here');
