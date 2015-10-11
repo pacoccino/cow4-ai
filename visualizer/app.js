@@ -5,19 +5,13 @@ app.controller('mainCtrl', function($scope, IAVizConnector) {
     IAVizConnector.getMap().then(function(data) {
         $scope.map = data.data;
 
-        IAVizConnector.getRoute().then(function(data) {
-            var path = data.data;
-            for(var i=0; i<path.length; i++) {
-                var cell = path[i];
-                $scope.map[cell.y][cell.x].isPath = true;
-            }
+        IAVizConnector.getShortestRoutes().then(function(data) {
+            $scope.shortestRoutes = data.data;
+            $scope.showPath($scope.shortestRoutes[0].path);
         });
-        IAVizConnector.getShortPath().then(function(data) {
-            var path = data.data;
-            for(var i=0; i<path.length; i++) {
-                var cell = path[i];
-                $scope.map[cell.y][cell.x].isShortestPath = true;
-            }
+
+        IAVizConnector.getAllRoutes().then(function(data) {
+            $scope.allRoutes = data.data;
         });
 
         IAVizConnector.getDistances().then(function(data) {
@@ -42,7 +36,7 @@ app.controller('mainCtrl', function($scope, IAVizConnector) {
         if(cell.isPath)
             style.backgroundColor = 'yellow';
 
-        if(cell.isShortestPath)
+        if(cell.isPath)
             style.backgroundColor = 'green';
 
         if(cell.occupantId)
@@ -68,6 +62,22 @@ app.controller('mainCtrl', function($scope, IAVizConnector) {
         return style;
     };
 
+    $scope.showPath = function(path) {
+        if(!path) {
+            path = $scope.shortestRoute.path;
+        }
+        for (var y = 0; y < $scope.map.length; y++) {
+            var line = $scope.map[y];
+            for (var x = 0; x < line.length; x++) {
+                var cell = line[x];
+                cell.isPath = false;
+            }
+        }
+        for(var i=0; i<path.length; i++) {
+            var cell = path[i];
+            $scope.map[cell.y][cell.x].isPath = true;
+        }
+    };
 });
 
 app.service('IAVizConnector', function($http) {
@@ -85,15 +95,6 @@ app.service('IAVizConnector', function($http) {
         return $http(request);
     };
 
-    var getRoute = function() {
-
-        var request = {
-            method: 'GET',
-            url:  host + 'getRoute'
-        };
-
-        return $http(request);
-    };
     var getDistances = function() {
 
         var request = {
@@ -103,11 +104,22 @@ app.service('IAVizConnector', function($http) {
 
         return $http(request);
     };
-    var getShortPath = function() {
+
+    var getShortestRoutes = function() {
 
         var request = {
             method: 'GET',
-            url:  host + 'getShortestPath'
+            url:  host + 'getShortestRoutes'
+        };
+
+        return $http(request);
+    };
+
+    var getAllRoutes = function() {
+
+        var request = {
+            method: 'GET',
+            url:  host + 'getAllRoutes'
         };
 
         return $http(request);
@@ -115,8 +127,8 @@ app.service('IAVizConnector', function($http) {
 
     return {
         getMap: getMap,
-        getRoute: getRoute,
         getDistances: getDistances,
-        getShortPath: getShortPath
+        getShortestRoutes: getShortestRoutes,
+        getAllRoutes: getAllRoutes
     };
 });

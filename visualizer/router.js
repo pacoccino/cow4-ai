@@ -30,39 +30,51 @@ IAVizRouter.get('/getPlayers', function(req, res, next) {
     res.json(game.players);
 });
 
-IAVizRouter.get('/getRoute', function(req, res, next) {
-
-
-    var source = map.getPlayerCell(game.players[0].id);
-    var destination = map.getPlayerCell(game.players[1].id);
-
-    maze.setSource(source);
-    var path = maze.depthFirst(destination);
-
-    res.json(path);
-});
 
 IAVizRouter.get('/getDistances', function(req, res, next) {
 
 
     var source = map.getPlayerCell(game.players[0].id);
 
-    maze.setSource(source);
-    maze.breadthFirst();
+    maze.computeWeights(source);
 
     res.json(maze.distances);
 });
 
-IAVizRouter.get('/getShortestPath', function(req, res, next) {
+IAVizRouter.get('/getShortestRoutes', function(req, res, next) {
 
 
     var source = map.getPlayerCell(game.players[0].id);
     var destination = map.getPlayerCell(game.players[1].id);
 
-    maze.setSource(source);
-    maze.breadthFirst(destination);
+    maze.computeWeights(source);
+    var routes = maze.getShortestRoutes(destination);
 
-    res.json(maze.getSerializablePath());
+    var paths = [];
+    for (var i = 0; i < routes.length; i++) {
+        var route = routes[i];
+        paths.push(route.getPublic());
+    }
+
+    res.json(paths);
+});
+
+IAVizRouter.get('/getAllRoutes', function(req, res, next) {
+
+
+    var source = map.getPlayerCell(game.players[0].id);
+    var destination = map.getPlayerCell(game.players[1].id);
+
+    maze.computeWeights(source);
+    var routes = maze.getAllRoutes(destination);
+
+    var paths = [];
+    for (var i = 0; i < routes.length; i++) {
+        var route = routes[i];
+        paths.push(route.getPublic());
+    }
+
+    res.json(paths);
 });
 
 module.exports = IAVizRouter;

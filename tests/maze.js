@@ -8,7 +8,7 @@ var expect = chai.expect;
 
 var game, map, maze;
 
-describe('Map', function() {
+describe('Maze', function() {
 
     beforeEach(function() {
         game = new GameController({});
@@ -36,15 +36,27 @@ describe('Map', function() {
         var source = map.getPlayerCell(game.players[0].id);
         var destination = map.getPlayerCell(game.players[1].id);
 
-        maze.setSource(source);
-        maze.breadthFirst(destination);
+        maze.computeWeights(source);
 
-        expect(maze.distances[source.y][source.x]).to.equal(0);
-        expect(maze.distances[destination.y][destination.x]).to.equal(92);
+        expect(maze.nodes[source.y][source.x].distance).to.equal(0);
+        expect(maze.nodes[destination.y][destination.x].distance).to.equal(92);
+    });
 
-        expect(maze.shortPath.length).to.equal(93);
-        expect(maze.shortPath[0]).to.equal(source);
-        expect(maze.shortPath[92]).to.equal(destination);
+    it('shortPath', function() {
+
+
+        var source = map.getPlayerCell(game.players[0].id);
+        var destination = map.getPlayerCell(game.players[1].id);
+
+        maze.computeWeights(source);
+        var route = maze.getShortestRoutes(destination)[0];
+
+        expect(route.path.length).to.equal(92);
+        expect(route.path[0].x).to.equal(0);
+        expect(route.path[0].y).to.equal(1);
+        expect(route.path[91].x).to.equal(destination.x);
+        expect(route.path[91].y).to.equal(destination.y);
+        expect(route.cellPath[91]).to.equal(destination);
 
     });
 

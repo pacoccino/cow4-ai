@@ -48,6 +48,16 @@
     </div>
 
     <br/><br/><br/>
+
+    <div class="paths-choices">
+        <label>Shortests</label>
+        <button ng-repeat="route in shortestRoutes" ng-click="showPath(route.path)">{{route.length}}</button>
+        <br/>
+        <label>All</label>
+        <button ng-repeat="route in allRoutes" ng-click="showPath(route.path)">{{route.length}}</button>
+    </div>
+
+    <br/><br/><br/>
     <div class="legend">
         <span style="color: green">CHEMIN LE PLUS COURT</span><br/>
         <span style="color: red">PUTAIN DE POULET</span><br/>
