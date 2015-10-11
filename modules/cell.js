@@ -7,7 +7,7 @@ function Cell() {
     this.y = 0;
     this.occupantId = null;
     this.isSheep = false;
-    this.items = [];
+    this.item = null;
 }
 
 Cell.getNew = function() {
@@ -36,23 +36,18 @@ Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {
 
     var findAdjacents = function(cell) {
         var adjacents = [];
-        var adjCell;
 
         if(cell.left) {
-            adjCell = map.getCell(x-1, y);
-            adjacents.push(adjCell)
+            adjacents.push(map.getCell(x-1, y));
         }
         if(cell.top) {
-            adjCell = map.getCell(x, y-1);
-            adjacents.push(adjCell)
+            adjacents.push(map.getCell(x, y-1));
         }
         if(cell.bottom) {
-            adjCell = map.getCell(x, y+1);
-            adjacents.push(adjCell)
+            adjacents.push(map.getCell(x, y+1));
         }
         if(cell.right) {
-            adjCell = map.getCell(x+1, y);
-            adjacents.push(adjCell)
+            adjacents.push(map.getCell(x+1, y));
         }
         return adjacents;
     };
@@ -65,7 +60,7 @@ Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {
     this.y = y;
     this.occupantId = serverCell.occupant ? serverCell.occupant.id : null;
     this.isSheep = (serverCell.occupant && serverCell.occupant.name === 'SheepIA') ? true : false;
-    this.items = serverCell.items || [];
+    this.item = serverCell.item || null;
 };
 
 module.exports = Cell;
