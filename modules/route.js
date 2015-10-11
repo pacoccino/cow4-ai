@@ -20,7 +20,9 @@ Route.prototype.addStep = function(cell) {
 
     this.length++;
 
-    this.items.push(cell.item);
+    if(cell.item) {
+        this.items.push(cell.item);
+    }
 };
 
 Route.prototype.reverse = function() {

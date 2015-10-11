@@ -4,7 +4,7 @@ var IAVizRouter = express.Router({ params: 'inherit' });
 var _ = require('lodash');
 
 var mockMap = require('../map.json');
-var Map = require('../modules/gamestate');
+var GameState = require('../modules/gamestate');
 var Maze = require('../modules/maze');
 var GameController = require('../modules/gamecontroller');
 
@@ -12,8 +12,8 @@ var GameController = require('../modules/gamecontroller');
 var game, map, maze;
 
 game = new GameController({});
-map = new Map(game);
-map.setGameMap(mockMap);
+map = new GameState(game);
+map.fetchServerGameMap(mockMap);
 maze = new Maze(map);
 
 IAVizRouter.get('/', function(req, res, next) {
@@ -34,7 +34,7 @@ IAVizRouter.get('/getPlayers', function(req, res, next) {
 IAVizRouter.get('/getDistances', function(req, res, next) {
 
 
-    var source = map.getPlayerCell(game.players[0].id);
+    var source = map.players.getPlayerCell(map.players.players[0].id);
 
     maze.computeWeights(source);
 
@@ -44,8 +44,8 @@ IAVizRouter.get('/getDistances', function(req, res, next) {
 IAVizRouter.get('/getShortestRoutes', function(req, res, next) {
 
 
-    var source = map.getPlayerCell(game.players[0].id);
-    var destination = map.getPlayerCell(game.players[1].id);
+    var source = map.players.getPlayerCell(map.players.players[0].id);
+    var destination = map.players.getPlayerCell(map.players.players[1].id);
 
     maze.computeWeights(source);
     var routes = maze.getShortestRoutes(destination);
@@ -62,8 +62,8 @@ IAVizRouter.get('/getShortestRoutes', function(req, res, next) {
 IAVizRouter.get('/getAllRoutes', function(req, res, next) {
 
 
-    var source = map.getPlayerCell(game.players[0].id);
-    var destination = map.getPlayerCell(game.players[1].id);
+    var source = map.players.getPlayerCell(map.players.players[0].id);
+    var destination = map.players.getPlayerCell(map.players.players[1].id);
 
     maze.computeWeights(source);
     var routes = maze.getAllRoutes(destination);

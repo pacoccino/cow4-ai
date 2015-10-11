@@ -1,4 +1,5 @@
 var Constants = require('./constants');
+var Player = require('./player');
 var Communication = require('./communication');
 var _ = require('lodash');
 
@@ -15,9 +16,12 @@ Players.prototype.push = function(player) {
     this.players.push(player);
 };
 
-Players.prototype.getPlayerCell = function(playerId) {
+Players.prototype.getPlayerCell = function(player) {
 
-    var player = this.getPlayerById(playerId);
+    if(!(player instanceof Player)) {
+        player = this.getPlayerById(player);
+    }
+
     if(player) {
         var fetchedCell = this.gamestate.getCell(player.position.x, player.position.y);
         return fetchedCell;

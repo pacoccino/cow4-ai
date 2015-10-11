@@ -1,7 +1,7 @@
 var Maze = require('./maze');
 var Action = require('./action');
 
-var sendDelay = 10;
+var sendDelay = 1;
 
 function IA(gamestate) {
     this.gamestate = gamestate;
