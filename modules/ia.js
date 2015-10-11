@@ -20,12 +20,12 @@ IA.prototype.getActions = function(callback) {
     var source = this.map.getCell(me.position.x, me.position.y);
     var destination = this.map.getCell(sheep.position.x, sheep.position.y);
 
-    maze.setSource(source);
-    maze.breadthFirst(destination);
+    maze.computeWeights(source);
+    var route = maze.getShortestRoute(destination);
 
-    if(maze.shortPath) {
+    if(route) {
         for(var i=0; i<me.pm; i++) {
-            var cell = maze.shortPath[i+1];
+            var cell = route.cellPath[i];
 
             // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
             if(cell.occupantId !== null && cell.occupantId !== sheep.id) {

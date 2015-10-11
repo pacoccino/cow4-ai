@@ -93,7 +93,7 @@ GameController.prototype.listenGame = function(data) {
         });
     }
     else {
-        console.log("Message reçu inconnu:", data)
+        console.log("Message recu inconnu:", data)
     }
 };
 
