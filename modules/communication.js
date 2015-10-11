@@ -7,7 +7,6 @@ function Communication(socket) {
 
     self.listener = null;
     self.listenerScope = null;
-    self.myId = null;
 
     var buffer = new Buffer(0);
 
@@ -67,16 +66,6 @@ Communication.prototype.setListener = function(listener, listenerScope) {
     else {
         this.listener = null;
     }
-};
-
-Communication.prototype.getId = function() {
-
-    return this.myId;
-};
-
-Communication.prototype.setId = function(id) {
-
-    this.myId = id;
 };
 
 module.exports = Communication;

@@ -15,7 +15,7 @@ describe('GameState', function() {
     });
 
     it('get cell', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
         // (x,y)
         var cell = map.getCell(0,0);
@@ -33,7 +33,7 @@ describe('GameState', function() {
     });
 
     it('get cell by id', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
 
         var cell = map.getCellById(mockMap.cells[0][0].id);
@@ -42,49 +42,49 @@ describe('GameState', function() {
     });
 
     it('fetch players', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
-        expect(game.players.length).to.equal(3);
-        expect(game.players[0].id).to.equal(mockMap.iaList[0].id);
-        expect(game.players[1].id).to.equal(mockMap.iaList[1].id);
-        expect(game.players[2].id).to.equal(mockMap.iaList[2].id);
-        expect(game.players[0].name).to.equal(mockMap.iaList[0].name);
-        expect(game.players[1].name).to.equal(mockMap.iaList[1].name);
-        expect(game.players[2].name).to.equal(mockMap.iaList[2].name);
+        expect(map.players.players.length).to.equal(3);
+        expect(map.players.players[0].id).to.equal(mockMap.iaList[0].id);
+        expect(map.players.players[1].id).to.equal(mockMap.iaList[1].id);
+        expect(map.players.players[2].id).to.equal(mockMap.iaList[2].id);
+        expect(map.players.players[0].name).to.equal(mockMap.iaList[0].name);
+        expect(map.players.players[1].name).to.equal(mockMap.iaList[1].name);
+        expect(map.players.players[2].name).to.equal(mockMap.iaList[2].name);
     });
 
     it('fetch with existing', function() {
-        game.players.push(new Player({id:mockMap.iaList[0].id}));
-        map.setGameMap(mockMap);
+        map.players.push(new Player({id:mockMap.iaList[0].id}));
+        map.fetchServerGameMap(mockMap);
 
-        expect(game.players.length).to.equal(3);
-        expect(game.players[0].id).to.equal(mockMap.iaList[0].id);
-        expect(game.players[1].id).to.equal(mockMap.iaList[1].id);
-        expect(game.players[2].id).to.equal(mockMap.iaList[2].id);
+        expect(map.players.players.length).to.equal(3);
+        expect(map.players.players[0].id).to.equal(mockMap.iaList[0].id);
+        expect(map.players.players[1].id).to.equal(mockMap.iaList[1].id);
+        expect(map.players.players[2].id).to.equal(mockMap.iaList[2].id);
     });
 
 
     it('locate players', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
-        expect(game.players.length).to.equal(3);
-        expect(game.players[0].position.id).not.to.equal(0);
-        expect(game.players[1].position.id).not.to.equal(0);
-        expect(game.players[2].position.id).not.to.equal(0);
+        expect(map.players.players.length).to.equal(3);
+        expect(map.players.players[0].position.id).not.to.equal(0);
+        expect(map.players.players[1].position.id).not.to.equal(0);
+        expect(map.players.players[2].position.id).not.to.equal(0);
 
-        expect(game.players[0].position.x).to.equal(0);
-        expect(game.players[1].position.x).to.equal(map.mapSize.width - 1);
+        expect(map.players.players[0].position.x).to.equal(0);
+        expect(map.players.players[1].position.x).to.equal(map.mapSize.width - 1);
 
-        expect(game.players[0].position.y).to.equal(0);
-        expect(game.players[1].position.y).to.equal(map.mapSize.height - 1);
+        expect(map.players.players[0].position.y).to.equal(0);
+        expect(map.players.players[1].position.y).to.equal(map.mapSize.height - 1);
 
-        expect(game.players[0].position.id).to.equal(1424090482209);
-        expect(game.players[1].position.id).to.equal(1424090482833);
-        expect(game.players[2].position.id).to.equal(1424090482510);
+        expect(map.players.players[0].position.id).to.equal(1424090482209);
+        expect(map.players.players[1].position.id).to.equal(1424090482833);
+        expect(map.players.players[2].position.id).to.equal(1424090482510);
     });
 
     it('fetchCells', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
         var firstCase = map.fetchedMap[0][0];
         var firstCase2ndRow = map.fetchedMap[1][0];
@@ -107,7 +107,7 @@ describe('GameState', function() {
     });
 
     it('fetchCells2', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
         for (var x = 0; x < map.mapSize.width; x++) {
             var cell = map.fetchedMap[0][x];
@@ -124,7 +124,7 @@ describe('GameState', function() {
         }
     });
     it('find adjacents', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
         var firstCase = map.getCell(0,0);
         var bottomCase = map.getCell(0,1);
@@ -137,7 +137,7 @@ describe('GameState', function() {
     });
 
     xit('drawMap', function() {
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
         map.drawMap();
     });
 

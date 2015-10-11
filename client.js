@@ -19,7 +19,7 @@ var auth = function(callback) {
     var authListener = function(data) {
         var response = data;
         if (response.type && response.type === 'id' && response.id) {
-            communication.setId(response.id);
+            Communication.MyId = response.id;
             console.log('Authentication success, ID: ', response.id);
             callback && callback();
         }

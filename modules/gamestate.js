@@ -1,22 +1,25 @@
 var Player = require('./player');
+var Players = require('./players');
 var Cell = require('./cell');
 var Helpers = require('./helpers');
 var _ = require('lodash');
 
-function GameState(game, serverGameMap) {
-    this.game = game;
-
+function GameState() {
     this.serverGameMap = null;
+
+    this.players = new Players(this);
 
     this.fetchedMap = [];
 
-    if(serverGameMap) {
-        this.setGameMap(serverGameMap);
-    }
+    this.currentTurn = 0;
+    this.allItems = [];
 }
 
-GameState.prototype.setGameMap = function(serverGameMap) {
+
+GameState.prototype.fetchServerGameMap = function(serverGameMap) {
     this.serverGameMap = serverGameMap;
+
+    this.currentTurn = serverGameMap.currentTurn;
 
     this.mapSize = {
         height: this.serverGameMap.cells.length,
@@ -24,6 +27,7 @@ GameState.prototype.setGameMap = function(serverGameMap) {
     };
 
     this.fetchedMap = Helpers.CreateMatrix(this.mapSize.width, this.mapSize.height, Cell.getNew);
+    this.allItems = [];
 
     this.processGameMap();
 };
@@ -53,18 +57,6 @@ GameState.prototype.getCellById = function(cellId) {
     return null;
 };
 
-GameState.prototype.getPlayerCell = function(playerId) {
-
-    var player = this.game.getPlayerById(playerId);
-    if(player) {
-        var fetchedCell = this.getCell(player.position.x, player.position.y);
-        return fetchedCell;
-    }
-    else {
-        return null;
-    }
-};
-
 GameState.prototype.getSerializableMap = function() {
     var serializable = _.cloneDeep(this.fetchedMap);
 
@@ -86,6 +78,7 @@ GameState.prototype.processGameMap = function() {
             var myCell = this.getCell(x,y);
 
             myCell.fetchServerCell(serverCell, x, y, this);
+            this.concatItems(myCell);
             this.locatePlayer(serverCell, x, y);
         }
     }
@@ -97,10 +90,10 @@ GameState.prototype.fetchPlayers = function() {
     for (var i = 0; i < this.serverGameMap.iaList.length; i++) {
         var player = this.serverGameMap.iaList[i];
 
-        var existing = this.game.getPlayerById(player.id);
+        var existing = this.players.getPlayerById(player.id);
         if(!existing) {
             var newPlayer = new Player(player);
-            this.game.players.push(newPlayer);
+            this.players.push(newPlayer);
         }
         else {
             existing.setFrom(player);
@@ -111,7 +104,7 @@ GameState.prototype.fetchPlayers = function() {
 GameState.prototype.locatePlayer = function(cell, x, y) {
 
     if (cell.occupant) {
-        var existing = this.game.getPlayerById(cell.occupant.id);
+        var existing = this.players.getPlayerById(cell.occupant.id);
 
         if (!existing) {
             console.error('Unknown player on the map !');
@@ -124,6 +117,17 @@ GameState.prototype.locatePlayer = function(cell, x, y) {
             };
         }
     }
+};
+GameState.prototype.concatItems = function(cell) {
+
+    if(!cell.item) return;
+
+    this.allItems.push(
+        {
+            cell: cell,
+            item: cell.item
+        }
+    );
 };
 
 GameState.prototype.drawMap = function() {

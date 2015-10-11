@@ -55,11 +55,11 @@ describe('Action', function() {
     it('executes move', function() {
         var game = new GameController({});
         var map = new GameState(game);
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
 
         action.move(mockMap.cells[0][1].id);
 
-        var player = game.players[0];
+        var player = map.players.players[0];
         action.executeOnMap(map, player);
 
         expect(map.getCell(0, 0).occupantId).to.be.null;

@@ -13,15 +13,15 @@ describe('Maze', function() {
     beforeEach(function() {
         game = new GameController({});
         map = new GameState(game);
-        map.setGameMap(mockMap);
+        map.fetchServerGameMap(mockMap);
         maze = new Maze(map);
     });
 
     xit('depthFirst', function() {
 
 
-        var source = map.getPlayerCell(game.players[0].id);
-        var destination = map.getPlayerCell(game.players[1].id);
+        var source = map.players.getPlayerCell(map.players.players[0].id);
+        var destination = map.players.getPlayerCell(map.players.players[1].id);
 
         maze.setSource(source);
         var paths = maze.depthFirst(destination);
@@ -33,8 +33,8 @@ describe('Maze', function() {
     it('breadthFirst', function() {
 
 
-        var source = map.getPlayerCell(game.players[0].id);
-        var destination = map.getPlayerCell(game.players[1].id);
+        var source = map.players.getPlayerCell(map.players.players[0].id);
+        var destination = map.players.getPlayerCell(map.players.players[1].id);
 
         maze.computeWeights(source);
 
@@ -45,8 +45,8 @@ describe('Maze', function() {
     it('shortPath', function() {
 
 
-        var source = map.getPlayerCell(game.players[0].id);
-        var destination = map.getPlayerCell(game.players[1].id);
+        var source = map.players.getPlayerCell(map.players.players[0].id);
+        var destination = map.players.getPlayerCell(map.players.players[1].id);
 
         maze.computeWeights(source);
         var route = maze.getShortestRoutes(destination)[0];

@@ -3,22 +3,21 @@ var Action = require('./action');
 
 var sendDelay = 10;
 
-function IA(gameController) {
-    this.game = gameController;
-    this.map = this.game.map;
+function IA(gamestate) {
+    this.gamestate = gamestate;
 }
 
 IA.prototype.getActions = function(callback) {
 
-    var maze = new Maze(this.map);
+    var maze = new Maze(this.gamestate);
 
     var actions = [];
-    var me = this.game.getMe();
-    var ennemy = this.game.getEnnemy();
-    var sheep = this.game.getSheep();
+    var me = this.gamestate.players.getMe();
+    var ennemy = this.gamestate.players.getEnnemy();
+    var sheep = this.gamestate.players.getSheep();
 
-    var source = this.map.getCell(me.position.x, me.position.y);
-    var destination = this.map.getCell(sheep.position.x, sheep.position.y);
+    var source = this.gamestate.getCell(me.position.x, me.position.y);
+    var destination = this.gamestate.getCell(sheep.position.x, sheep.position.y);
 
     maze.computeWeights(source);
     var route = maze.getShortestRoute(destination);
