@@ -1,6 +1,6 @@
 var mockMap = require('../map.json');
 var Cell = require('../modules/cell');
-var Map = require('../modules/map');
+var GameState = require('../modules/gamestate');
 var GameController = require('../modules/gamecontroller');
 
 var chai = require('chai');
@@ -26,7 +26,7 @@ describe('Cell', function () {
 
     beforeEach(function () {
         game = new GameController({});
-        map = new Map(game);
+        map = new GameState(game);
         map.setGameMap(mockMap);
         cell = Cell.getNew();
     });

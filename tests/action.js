@@ -1,5 +1,5 @@
 var mockMap = require('../map.json');
-var Map = require('../modules/map');
+var GameState = require('../modules/gamestate');
 var GameController = require('../modules/gamecontroller');
 var Action = require('../modules/action');
 var chai = require('chai');
@@ -54,7 +54,7 @@ describe('Action', function() {
 
     it('executes move', function() {
         var game = new GameController({});
-        var map = new Map(game);
+        var map = new GameState(game);
         map.setGameMap(mockMap);
 
         action.move(mockMap.cells[0][1].id);

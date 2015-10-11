@@ -4,7 +4,7 @@ var IAVizRouter = express.Router({ params: 'inherit' });
 var _ = require('lodash');
 
 var mockMap = require('../map.json');
-var Map = require('../modules/map');
+var Map = require('../modules/gamestate');
 var Maze = require('../modules/maze');
 var GameController = require('../modules/gamecontroller');
 

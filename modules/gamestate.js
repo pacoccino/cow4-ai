@@ -3,7 +3,7 @@ var Cell = require('./cell');
 var Helpers = require('./helpers');
 var _ = require('lodash');
 
-function Map(game, serverGameMap) {
+function GameState(game, serverGameMap) {
     this.game = game;
 
     this.serverGameMap = null;
@@ -15,7 +15,7 @@ function Map(game, serverGameMap) {
     }
 }
 
-Map.prototype.setGameMap = function(serverGameMap) {
+GameState.prototype.setGameMap = function(serverGameMap) {
     this.serverGameMap = serverGameMap;
 
     this.mapSize = {
@@ -28,16 +28,16 @@ Map.prototype.setGameMap = function(serverGameMap) {
     this.processGameMap();
 };
 
-Map.prototype.getMap = function() {
+GameState.prototype.getMap = function() {
     return this.fetchedMap;
 };
 
-Map.prototype.getCell = function(x,y) {
+GameState.prototype.getCell = function(x,y) {
 
     return this.fetchedMap[y][x];
 };
 
-Map.prototype.getCellById = function(cellId) {
+GameState.prototype.getCellById = function(cellId) {
 
     var map = this.getMap();
 
@@ -53,7 +53,7 @@ Map.prototype.getCellById = function(cellId) {
     return null;
 };
 
-Map.prototype.getPlayerCell = function(playerId) {
+GameState.prototype.getPlayerCell = function(playerId) {
 
     var player = this.game.getPlayerById(playerId);
     if(player) {
@@ -65,7 +65,7 @@ Map.prototype.getPlayerCell = function(playerId) {
     }
 };
 
-Map.prototype.getSerializableMap = function() {
+GameState.prototype.getSerializableMap = function() {
     var serializable = _.cloneDeep(this.fetchedMap);
 
     for (var y=0; y<this.mapSize.height; y++) {
@@ -76,7 +76,7 @@ Map.prototype.getSerializableMap = function() {
     return serializable;
 };
 
-Map.prototype.processGameMap = function() {
+GameState.prototype.processGameMap = function() {
 
     this.fetchPlayers();
 
@@ -92,7 +92,7 @@ Map.prototype.processGameMap = function() {
 };
 
 
-Map.prototype.fetchPlayers = function() {
+GameState.prototype.fetchPlayers = function() {
 
     for (var i = 0; i < this.serverGameMap.iaList.length; i++) {
         var player = this.serverGameMap.iaList[i];
@@ -108,7 +108,7 @@ Map.prototype.fetchPlayers = function() {
     }
 };
 
-Map.prototype.locatePlayer = function(cell, x, y) {
+GameState.prototype.locatePlayer = function(cell, x, y) {
 
     if (cell.occupant) {
         var existing = this.game.getPlayerById(cell.occupant.id);
@@ -126,7 +126,7 @@ Map.prototype.locatePlayer = function(cell, x, y) {
     }
 };
 
-Map.prototype.drawMap = function() {
+GameState.prototype.drawMap = function() {
 
     if (!this.fetchedMap || this.fetchedMap.length < 1) {
         console.log('nothing to draw');
@@ -181,5 +181,5 @@ Map.prototype.drawMap = function() {
 
 };
 
-module.exports = Map;
+module.exports = GameState;
 

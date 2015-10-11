@@ -1,5 +1,5 @@
 var Constants = require('./constants');
-var Map = require('./map');
+var GameState = require('./gamestate');
 var IA = require('./ia');
 var _ = require('lodash');
 
@@ -7,7 +7,7 @@ var GameController = function(communication) {
     this.communication = communication;
 
     this.players = [];
-    this.map = new Map(this);
+    this.map = new GameState(this);
     this.ia = new IA(this);
 
     this.currentTurn = 0;
@@ -58,8 +58,8 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
     var self = this;
 
-    self.map.setGameMap(gameMap);
     this.currentTurn = gameMap.currentTurn;
+    self.map.setGameMap(gameMap);
 
     console.log('New turn : ', self.currentTurn);
     var bench = Date.now();
