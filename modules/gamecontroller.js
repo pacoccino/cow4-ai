@@ -47,7 +47,7 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
         var response = {
             type: 'turnResult',
             ia: IAinfo,
-            actions: actions
+            actions: Action.transformForServer(actions)
         };
 
         var time = Date.now() - bench;

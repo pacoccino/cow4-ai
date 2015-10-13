@@ -94,7 +94,7 @@ IApoulet.prototype.getActions = function(callback) {
         console.log("next", nextCell.x, nextCell.y);
         action.move(nextCell.id);
 
-        actions.push(action.getServerAction());
+        actions.push(action);
     }
 
     setTimeout(function() {

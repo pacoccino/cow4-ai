@@ -81,4 +81,19 @@ var executeMove = function(target, gamestate, player) {
     destCell.occupantId = player.id;
 };
 
+Action.transformForServer = function(actions) {
+    if(typeof action === 'array') {
+        var serverActions = [];
+        for (var i = 0; i < actions.length; i++) {
+            var action = actions[i];
+            serverActions.push(action.getServerAction());
+        }
+        return serverActions;
+    }
+    else if(actions instanceof Action) {
+        return actions.getServerAction();
+    }
+    else return null;
+}
+
 module.exports = Action;
