@@ -1,5 +1,5 @@
 var GameState = require('./gamestate');
-var Communication = require('./communication');
+var Action = require('./action');
 var IA = require('./ia');
 var IApoulet = require('./iapoulet');
 var _ = require('lodash');

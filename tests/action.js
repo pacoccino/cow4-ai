@@ -64,4 +64,26 @@ describe('Action', function() {
         expect(map.getCell(0, 0).occupantId).to.be.null;
         expect(map.getCell(1, 0).occupantId).to.equal(player.id);
     });
+
+    it('transformForServer one', function() {
+        action.getItem();
+
+        var serverAction = Action.transformForServer(action);
+
+        expect(serverAction.type).to.equal('getItem');
+    });
+
+    it('transformForServer array', function() {
+        action.getItem();
+        var oaction = new Action();
+        oaction.useItem(12);
+
+        var actions = [action, oaction];
+
+        var serverActions = Action.transformForServer(actions);
+
+        expect(serverActions[0].type).to.equal('getItem');
+        expect(serverActions[1].type).to.equal('useItem');
+        expect(serverActions[1].item.type).to.equal(12);
+    });
 });

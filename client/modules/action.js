@@ -82,7 +82,7 @@ var executeMove = function(target, gamestate, player) {
 };
 
 Action.transformForServer = function(actions) {
-    if(typeof action === 'array') {
+    if(actions instanceof Array) {
         var serverActions = [];
         for (var i = 0; i < actions.length; i++) {
             var action = actions[i];
@@ -94,6 +94,6 @@ Action.transformForServer = function(actions) {
         return actions.getServerAction();
     }
     else return null;
-}
+};
 
 module.exports = Action;
