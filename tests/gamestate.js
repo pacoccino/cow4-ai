@@ -137,13 +137,12 @@ describe('GameState', function() {
 
     it('clones 1', function() {
         var oldGameState, newGameState;
-
         oldGameState = new GameState();
-
         oldGameState.fetchServerGameMap(mockMap);
 
         oldGameState.currentTurn = 5;
 
+        // Clone new gamestate, new one must reflect old one
         newGameState = oldGameState.clone();
 
         expect(newGameState.currentTurn).to.equal(oldGameState.currentTurn);
@@ -172,15 +171,14 @@ describe('GameState', function() {
 
     it('clones 2', function() {
         var oldGameState, newGameState;
-
         oldGameState = new GameState();
-
         oldGameState.fetchServerGameMap(mockMap);
 
         oldGameState.currentTurn = 5;
 
         newGameState = oldGameState.clone();
 
+        // Change new game state, must not reflect on old
         newGameState.currentTurn = 6;
 
         newGameState.allItems[0] = 45;
@@ -199,9 +197,6 @@ describe('GameState', function() {
 
         expect(newGameState.allItems.length).not.to.equal(oldGameState.allItems.length);
         expect(newGameState.allItems[0]).not.to.equal(oldGameState.allItems[0]);
-
-        expect(newGameState.mapSize.width).to.equal(oldGameState.mapSize.width);
-        expect(newGameState.mapSize.height).to.equal(oldGameState.mapSize.height);
 
         expect(newGameState.players.players.length).not.to.equal(oldGameState.players.players.length);
         expect(newGameState.players.players[0].id).not.to.equal(oldGameState.players.players[0].id);
