@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 function Cell() {
     this.id = null;
     this.ways = {};
@@ -12,6 +14,22 @@ function Cell() {
 
 Cell.getNew = function() {
     return new Cell();
+};
+
+Cell.prototype.clone = function() {
+    var newCell = new Cell();
+
+    newCell.id = this.id;
+    newCell.ways = _.clone(this.ways);
+    newCell.walls = _.clone(this.walls);
+    newCell.adjacents = _.clone(this.adjacents);
+    newCell.x = this.x;
+    newCell.y = this.y;
+    newCell.occupantId = this.occupantId;
+    newCell.isSheep = this.isSheep;
+    newCell.item = this.item;
+
+    return newCell;
 };
 
 Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {

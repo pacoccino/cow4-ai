@@ -10,9 +10,14 @@ function GameState() {
     this.players = new Players(this);
 
     this.fetchedMap = [];
+    this.mapSize = {
+        height:0,
+        width: 0
+    };
 
     this.currentTurn = 0;
     this.allItems = [];
+
 }
 
 
@@ -72,6 +77,8 @@ GameState.prototype.processGameMap = function() {
 
     this.fetchPlayers();
 
+    this.allItems = [];
+
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var x = 0; x < this.mapSize.height; x++) {
             var serverCell = this.serverGameMap.cells[y][x];
@@ -118,6 +125,7 @@ GameState.prototype.locatePlayer = function(cell, x, y) {
         }
     }
 };
+
 GameState.prototype.concatItems = function(cell) {
 
     if(!cell.item) return;
@@ -130,59 +138,31 @@ GameState.prototype.concatItems = function(cell) {
     );
 };
 
-GameState.prototype.drawMap = function() {
 
-    if (!this.fetchedMap || this.fetchedMap.length < 1) {
-        console.log('nothing to draw');
+GameState.prototype.clone = function() {
+    var newGameState = new GameState();
+    newGameState.currentTurn = this.currentTurn;
+
+    for (var i = 0; i < this.players.players.length; i++) {
+        var player = this.players.players[i];
+        newGameState.players.push(player.clone());
     }
 
-    process.stdout.write('\n');
-
-    for (var y = 0; y < this.mapSize.height; y++) {
-        for (var z = 0; z < 2; z++) {
-            for (var x = 0; x < this.mapSize.width; x++) {
-                var cell = this.getCell(x, y);
-                if (z === 0) {
-                    if (cell.walls.top)
-                        process.stdout.write(' -');
-                    else
-                        process.stdout.write('  ');
-                }
-                else if (z === 1) {
-                    if (cell.walls.left)
-                        process.stdout.write('|');
-                    else
-                        process.stdout.write(' ');
-
-                    if (cell.occupantId) {
-                        if (cell.isSheep)
-                            process.stdout.write('S');
-                        else
-                            process.stdout.write('P');
-                    }
-                    else
-                        process.stdout.write(' ');
-
-                }
-            }
-
-            var cell = this.getCell(this.mapSize.width-1, y);
-            if (z === 1 && cell.walls.right) {
-                process.stdout.write('|');
-            }
-            process.stdout.write('\n');
+    newGameState.fetchedMap = Helpers.CreateMatrix(this.mapSize.width, this.mapSize.height);
+    for (var y = 0; y < newGameState.fetchedMap.length; y++) {
+        for (var x = 0; x < newGameState.fetchedMap[y].length; x++) {
+            newGameState.fetchedMap[y][x] = this.fetchedMap[y][x].clone();
         }
     }
-    for (var x = 0; x < this.mapSize.width; x++) {
-        var cell = this.getCell(x, this.mapSize.height-1);
-        if (cell.walls.bottom)
-            process.stdout.write(' -');
-        else
-            process.stdout.write('  ');
-    }
 
-    process.stdout.write('\n');
+    newGameState.allItems = this.allItems.slice();
 
+    newGameState.mapSize = {
+        height:this.mapSize.height,
+        width: this.mapSize.width
+    };
+
+    return newGameState;
 };
 
 module.exports = GameState;

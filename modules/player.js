@@ -20,8 +20,6 @@ Player.prototype.setFrom = function (basePlayer) {
     this.position = basePlayer.position || this.position || 0;
 };
 
-
-
 Player.prototype.toPublic = function () {
     var publicPlayer = {
         id: this.id,
@@ -31,6 +29,14 @@ Player.prototype.toPublic = function () {
         items: this.items
     };
     return publicPlayer;
+};
+
+Player.prototype.clone = function () {
+    var newPlayer = new Player(this);
+
+    this.items = this.items.slice();
+
+    return newPlayer;
 };
 
 module.exports = Player;
