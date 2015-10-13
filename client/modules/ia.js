@@ -34,7 +34,7 @@ IA.prototype.getActions = function(callback) {
             var action = new Action();
             action.move(cell.id);
 
-            actions.push(action.getServerAction());
+            actions.push(action);
         }
     }
 
