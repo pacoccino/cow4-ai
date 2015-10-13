@@ -1,4 +1,4 @@
-var Player = require('../modules/player');
+var Player = require('../client/modules/player');
 
 var chai = require('chai');
 var expect = chai.expect;

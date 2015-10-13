@@ -1,5 +1,5 @@
 var express = require('express');
-var IAVizRouter = require('./visualizer/router');
+var IAVizRouter = require('./router');
 
 var app = express();
 

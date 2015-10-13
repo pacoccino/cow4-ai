@@ -3,10 +3,10 @@ var express = require('express');
 var IAVizRouter = express.Router({ params: 'inherit' });
 var _ = require('lodash');
 
-var mockMap = require('../map.json');
-var GameState = require('../modules/gamestate');
-var Maze = require('../modules/maze');
-var GameController = require('../modules/gamecontroller');
+var mockMap = require('../tests/mockMap.json');
+var GameState = require('../client/modules/gamestate');
+var Maze = require('../client/modules/maze');
+var GameController = require('../client/modules/gamecontroller');
 
 
 var game, map, maze;

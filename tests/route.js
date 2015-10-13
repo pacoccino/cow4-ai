@@ -1,4 +1,4 @@
-var Route = require('../modules/route');
+var Route = require('../client/modules/route');
 
 var chai = require('chai');
 var expect = chai.expect;

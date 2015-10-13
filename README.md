@@ -20,7 +20,7 @@ $  npm run serve
 ### Running client
 
 ```sh
-$ node client.js
+$ node client/client.js
 ```
 
 You need 2 clients for playing game
@@ -34,7 +34,7 @@ $ mocha tests
 ### Map visualisation
    
 ```sh
-$ node iadebug.js
+$ node vizualiazer/iadebug.js
 $ chrome http://localhost:4000
 ```
 

@@ -1,7 +1,7 @@
-var mockMap = require('../map.json');
-var Cell = require('../modules/cell');
-var GameState = require('../modules/gamestate');
-var GameController = require('../modules/gamecontroller');
+var mockMap = require('./mockMap.json');
+var Cell = require('../client/modules/cell');
+var GameState = require('../client/modules/gamestate');
+var GameController = require('../client/modules/gamecontroller');
 
 var chai = require('chai');
 var expect = chai.expect;

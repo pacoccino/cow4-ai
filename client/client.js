@@ -1,9 +1,9 @@
 var net = require('net');
 var inquirer = require('inquirer');
 
-var Communication = require('./modules/communication');
-var Config = require('./modules/config');
-var GameController = require('./modules/gamecontroller');
+var Communication = require('./client/modules/communication');
+var Config = require('./client/modules/config');
+var GameController = require('./client/modules/gamecontroller');
 
 var communication;
 
