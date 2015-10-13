@@ -25,8 +25,7 @@ var serverCell = {
 describe('Cell', function () {
 
     beforeEach(function () {
-        game = new GameController({});
-        map = new GameState(game);
+        map = new GameState();
         map.fetchServerGameMap(mockMap);
         cell = Cell.getNew();
     });

@@ -11,8 +11,7 @@ var GameController = require('../modules/gamecontroller');
 
 var game, map, maze;
 
-game = new GameController({});
-map = new GameState(game);
+map = new GameState();
 map.fetchServerGameMap(mockMap);
 maze = new Maze(map);
 

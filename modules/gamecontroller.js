@@ -7,7 +7,7 @@ var _ = require('lodash');
 var GameController = function(communication) {
     this.communication = communication;
 
-    this.gamestate = new GameState(this);
+    this.gamestate = new GameState();
 
     this.ia = new IA(this.gamestate);
     this.iapoulet = new IApoulet(this.gamestate);

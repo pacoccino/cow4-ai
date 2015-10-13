@@ -53,8 +53,7 @@ describe('Action', function() {
     });
 
     it('executes move', function() {
-        var game = new GameController({});
-        var map = new GameState(game);
+        var map = new GameState();
         map.fetchServerGameMap(mockMap);
 
         action.move(mockMap.cells[0][1].id);

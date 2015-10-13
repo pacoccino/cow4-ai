@@ -10,8 +10,7 @@ var game, map;
 describe('GameState', function() {
 
     beforeEach(function() {
-        game = new GameController({});
-        map = new GameState(game);
+        map = new GameState();
     });
 
     it('get cell', function() {
