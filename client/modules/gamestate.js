@@ -62,17 +62,6 @@ GameState.prototype.getCellById = function(cellId) {
     return null;
 };
 
-GameState.prototype.getSerializableMap = function() {
-    var serializable = _.cloneDeep(this.fetchedMap);
-
-    for (var y=0; y<this.mapSize.height; y++) {
-        for (var x=0; x<this.mapSize.width; x++) {
-            delete serializable[y][x].adjacents;
-        }
-    }
-    return serializable;
-};
-
 GameState.prototype.processGameMap = function() {
 
     this.fetchPlayers();
@@ -86,7 +75,7 @@ GameState.prototype.processGameMap = function() {
 
             myCell.fetchServerCell(serverCell, x, y, this);
             this.concatItems(myCell);
-            this.locatePlayer(serverCell, x, y);
+            this.locatePlayer(serverCell);
         }
     }
 };
@@ -108,20 +97,16 @@ GameState.prototype.fetchPlayers = function() {
     }
 };
 
-GameState.prototype.locatePlayer = function(cell, x, y) {
+GameState.prototype.locatePlayer = function(serverCell) {
 
-    if (cell.occupant) {
-        var existing = this.players.getPlayerById(cell.occupant.id);
+    if (serverCell.occupant) {
+        var existing = this.players.getPlayerById(serverCell.occupant.id);
 
         if (!existing) {
             console.error('Unknown player on the map !');
         }
         else {
-            existing.position = {
-                id: cell.id,
-                x: x,
-                y: y
-            };
+            existing.cellId = serverCell.id;
         }
     }
 };

@@ -1,14 +1,23 @@
 var Maze = require('./maze');
+var Simulator = require('./simulator');
 var Action = require('./action');
+var Player = require('./player');
+
+var IApoulet = require('./iapoulet');
 
 var sendDelay = 1;
 
 function IA(gamestate) {
     this.gamestate = gamestate;
+
+
+    this.iapoulet = new IApoulet(this.gamestate);
 }
 
 IA.prototype.getActions = function(callback) {
 
+    var self = this;
+    var simulator = new Simulator(this.gamestate, this.iapoulet);
     var maze = new Maze(this.gamestate);
 
     var actions = [];
@@ -16,8 +25,8 @@ IA.prototype.getActions = function(callback) {
     var ennemy = this.gamestate.players.getEnnemy();
     var sheep = this.gamestate.players.getSheep();
 
-    var source = this.gamestate.getCell(me.position.x, me.position.y);
-    var destination = this.gamestate.getCell(sheep.position.x, sheep.position.y);
+    var source = this.gamestate.getCellById(me.cellId);
+    var destination = this.gamestate.getCellById(sheep.cellId);
 
     maze.computeWeights(source);
     var route = maze.getShortestRoute(destination);
@@ -36,6 +45,17 @@ IA.prototype.getActions = function(callback) {
 
             actions.push(action);
         }
+    }
+
+    var turnToEstimate = 5;
+    if(self.gamestate.currentTurn === 0) {
+        simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
+            var estimatedSheep = estimatedGamestate.players.getSheep();
+            var estimatedSheepCell = estimatedGamestate.getCellById(estimatedSheep.cellId);
+            console.log("estimated sheep position at turn " + (self.gamestate.currentTurn + turnToEstimate),
+                estimatedSheepCell.x, estimatedSheepCell.y);
+
+        });
     }
 
     setTimeout(function() {

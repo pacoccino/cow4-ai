@@ -16,24 +16,11 @@ describe('Maze', function() {
         maze = new Maze(map);
     });
 
-    xit('depthFirst', function() {
-
-
-        var source = map.players.getPlayerCell(map.players.players[0].id);
-        var destination = map.players.getPlayerCell(map.players.players[1].id);
-
-        maze.setSource(source);
-        var paths = maze.depthFirst(destination);
-
-        map.drawMap();
-        console.log(paths);
-    });
-
     it('breadthFirst', function() {
 
 
-        var source = map.players.getPlayerCell(map.players.players[0].id);
-        var destination = map.players.getPlayerCell(map.players.players[1].id);
+        var source = map.getCellById(map.players.players[0].cellId);
+        var destination = map.getCellById(map.players.players[1].cellId);
 
         maze.computeWeights(source);
 
@@ -44,8 +31,8 @@ describe('Maze', function() {
     it('shortPath', function() {
 
 
-        var source = map.players.getPlayerCell(map.players.players[0].id);
-        var destination = map.players.getPlayerCell(map.players.players[1].id);
+        var source = map.getCellById(map.players.players[0].cellId);
+        var destination = map.getCellById(map.players.players[1].cellId);
 
         maze.computeWeights(source);
         var route = maze.getShortestRoutes(destination)[0];

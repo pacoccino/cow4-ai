@@ -16,21 +16,6 @@ Players.prototype.push = function(player) {
     this.players.push(player);
 };
 
-Players.prototype.getPlayerCell = function(player) {
-
-    if(!(player instanceof Player)) {
-        player = this.getPlayerById(player);
-    }
-
-    if(player) {
-        var fetchedCell = this.gamestate.getCell(player.position.x, player.position.y);
-        return fetchedCell;
-    }
-    else {
-        return null;
-    }
-};
-
 Players.prototype.getPlayerById = function(id) {
     return _.find(this.players, {id:id});
 };

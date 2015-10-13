@@ -1,106 +1,91 @@
 var Maze = require('./maze');
 var Route = require('./route');
 var Action = require('./action');
+var Cell = require('./cell');
 
-
-var sendDelay = 1;
+var firstMoveSequence = null;
 
 function IApoulet(gamestate) {
     this.gamestate = gamestate;
     this.players = this.gamestate.players;
 
-    this.currentRoute = null;
-    this.firstMove = true;
 }
 
+IApoulet.prototype.generateMoveSequence = function() {
+    firstMoveSequence = [];
+    firstMoveSequence.push(null);
+    for (var i = 1; i < 13; i++) {
+        var cell = this.gamestate.getCell(12 - i, 12);
+        firstMoveSequence.push(cell.id);
+    }
+};
+
+// TODO capable de se rappeller de la derniere position meme si on a fait un new a ce tour tour
 IApoulet.prototype.getActions = function(callback) {
 
-    if(this.gamestate.currentTurn === 0) {
-        callback([]);
-        return;
-    }
+    if(!firstMoveSequence) this.generateMoveSequence();
 
     var me = this.players.getMe();
     var ennemy = this.players.getEnnemy();
     var sheep = this.players.getSheep();
 
-    var myCell = this.players.getPlayerCell(me);
-    var ennemyCell = this.players.getPlayerCell(ennemy);
-    var sheepCell = this.players.getPlayerCell(sheep);
+    var myCell = this.gamestate.getCellById(me.cellId);
+    var ennemyCell = this.gamestate.getCellById(ennemy.cellId);
+    var sheepCell = this.gamestate.getCellById(sheep.cellId);
 
     var nextCell = null;
 
-    if(this.firstMove) {
-        this.currentRoute = new Route();
-
-        for (var i = 0; i < 12; i++) {
-            var cell = this.gamestate.getCell(12-i-1, 12);
-            this.currentRoute.addStep(cell);
-        }
-        nextCell = this.currentRoute.cellPath.shift();
-        this.firstMove = false;
+    // Les x premiers tours sont prédeterminés
+    if(this.gamestate.currentTurn < firstMoveSequence.length) {
+        nextCell = firstMoveSequence[this.gamestate.currentTurn];
     }
     else {
-
-        if(this.currentRoute && this.currentRoute.cellPath.length > 0) {
-            nextCell = this.currentRoute.cellPath.shift();
+        // On continue de fuir sur le chemin prévu
+        if(sheepCell.adjacentsIds.length < 3) {
+            if(sheepCell.adjacentsIds[0].id !== this.lastCell.id) {
+                nextCell = sheepCell.adjacentsIds[0];
+            }
+            else {
+                nextCell = sheepCell.adjacentsIds[1];
+            }
         }
+        // On trouve un nouveau chemin
         else {
-            this.currentRoute = null;
 
-            // On continue de fuir sur le chemin prévu
-            if(sheepCell.adjacents.length < 3) {
-                // TODO pourquoi les references sont differentes ?
-                if(sheepCell.adjacents[0].id !== this.lastCell.id) {
-                    nextCell = sheepCell.adjacents[0];
+            var maze = new Maze(this.gamestate);
+            maze.computeWeights(sheepCell);
+
+            var routeToMe = maze.getShortestRoute(myCell);
+            var routeToEnnemy = maze.getShortestRoute(ennemyCell);
+
+            var adjacentsIds = sheepCell.adjacentsIds;
+
+            for (var i = 0; i < adjacentsIds.length; i++) {
+                var adjacentId = adjacentsIds[i];
+                if(adjacentId === routeToMe.cellPath[0].id || adjacentId === routeToEnnemy.cellPath[0].id) {
+                    continue;
                 }
                 else {
-                    nextCell = sheepCell.adjacents[1];
+                    nextCell = adjacentId;
+                    break;
                 }
-            }
-            // On trouve un nouveau chemin
-            else {
-                this.currentRoute = null;
-
-                var maze = new Maze(this.gamestate);
-                maze.computeWeights(sheepCell);
-
-                var routeToMe = maze.getShortestRoute(myCell);
-                var routeToEnnemy = maze.getShortestRoute(ennemyCell);
-
-                var adjacents = sheepCell.adjacents;
-
-                for (var i = 0; i < adjacents.length; i++) {
-                    var adjacent = adjacents[i];
-                    if(adjacent === routeToMe.cellPath[0] || adjacent === routeToEnnemy.cellPath[0]) {
-                        continue;
-                    }
-                    else {
-                        nextCell = adjacent;
-                        break;
-                    }
-                }
-
             }
         }
     }
 
     this.lastCell = sheepCell;
+
     // Execution
     var actions = [];
 
     if(nextCell) {
         var action = new Action();
-        console.log("next", nextCell.x, nextCell.y);
-        action.move(nextCell.id);
+        action.move(nextCell);
 
         actions.push(action);
     }
 
-    setTimeout(function() {
-
-        callback(actions);
-    }, sendDelay);
+    callback(actions);
 };
 
 module.exports = IApoulet;

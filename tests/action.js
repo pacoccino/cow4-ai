@@ -59,10 +59,11 @@ describe('Action', function() {
         action.move(mockMap.cells[0][1].id);
 
         var player = map.players.players[0];
-        action.executeOnGamestate(map, player);
+        action.execute(map, player);
 
         expect(map.getCell(0, 0).occupantId).to.be.null;
         expect(map.getCell(1, 0).occupantId).to.equal(player.id);
+        expect(player.cellId).to.equal(map.getCell(1, 0).id);
     });
 
     it('transformForServer one', function() {

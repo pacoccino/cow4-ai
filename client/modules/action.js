@@ -1,4 +1,5 @@
 var _ = require('lodash');
+var Player = require('./player');
 
 function Action() {
     this.type = null;
@@ -45,7 +46,7 @@ Action.prototype.getServerAction = function() {
     return serverAction;
 };
 
-Action.prototype.executeOnGamestate = function(gamestate, player) {
+Action.prototype.execute = function(gamestate, player) {
 
     if(!this.type) {
         console.log('Please set an action before');
@@ -58,8 +59,24 @@ Action.prototype.executeOnGamestate = function(gamestate, player) {
     }
 };
 
+
+Action.executeOnGamestate = function(actions, gamestate, player) {
+
+    if(actions instanceof Array) {
+
+        for (var i = 0; i < actions.length; i++) {
+            var action = actions[i];
+            action.execute(gamestate, player);
+        }
+    }
+    else if(actions instanceof Action) {
+
+        actions.execute(gamestate, player);
+    }
+};
+
 var executeMove = function(target, gamestate, player) {
-    var fromCell = gamestate.getCell(player.position.x, player.position.y);
+    var fromCell = gamestate.getCellById(player.cellId);
     var destCell = gamestate.getCellById(target);
 
     if(player.id !== fromCell.occupantId) {
@@ -71,14 +88,14 @@ var executeMove = function(target, gamestate, player) {
         return;
     }
 
-    var adjacent = _.find(fromCell.adjacents, destCell);
-    if(!adjacent) {
+    if(fromCell.adjacentsIds.indexOf(target) === -1) {
         console.log('wrong move execution, cells are not adjacents');
         return;
     }
 
     fromCell.occupantId = null;
     destCell.occupantId = player.id;
+    player.cellId = destCell.id;
 };
 
 Action.transformForServer = function(actions) {

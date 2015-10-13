@@ -4,7 +4,7 @@ function Cell() {
     this.id = null;
     this.ways = {};
     this.walls = {};
-    this.adjacents = [];
+    this.adjacentsIds = [];
     this.x = 0;
     this.y = 0;
     this.occupantId = null;
@@ -22,7 +22,7 @@ Cell.prototype.clone = function() {
     newCell.id = this.id;
     newCell.ways = _.clone(this.ways);
     newCell.walls = _.clone(this.walls);
-    newCell.adjacents = _.clone(this.adjacents);
+    newCell.adjacentsIds = _.clone(this.adjacentsIds);
     newCell.x = this.x;
     newCell.y = this.y;
     newCell.occupantId = this.occupantId;
@@ -53,31 +53,30 @@ Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {
     };
 
     var findAdjacents = function(cell) {
-        var adjacents = [];
+        var adjacentsIds = [];
 
         if(cell.left) {
-            adjacents.push(map.getCell(x-1, y));
+            adjacentsIds.push(cell.left);
         }
         if(cell.top) {
-            adjacents.push(map.getCell(x, y-1));
+            adjacentsIds.push(cell.top);
         }
         if(cell.bottom) {
-            adjacents.push(map.getCell(x, y+1));
+            adjacentsIds.push(cell.bottom);
         }
         if(cell.right) {
-            adjacents.push(map.getCell(x+1, y));
+            adjacentsIds.push(cell.right);
         }
-        return adjacents;
+        return adjacentsIds;
     };
 
     this.id = serverCell.id;
     this.ways = findWays(serverCell);
     this.walls = findWalls(serverCell);
-    this.adjacents = findAdjacents(serverCell);
+    this.adjacentsIds = findAdjacents(serverCell);
     this.x = x;
     this.y = y;
     this.occupantId = serverCell.occupant ? serverCell.occupant.id : null;
-    this.isSheep = (serverCell.occupant && serverCell.occupant.name === 'SheepIA') ? true : false;
     this.item = serverCell.item || null;
 };
 

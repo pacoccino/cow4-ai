@@ -2,9 +2,9 @@ var _ = require('lodash');
 var Helpers = require('./helpers');;
 var Route = require('./route');
 
-function Maze(map) {
+function Maze(gamestate) {
 
-    this.map = map || null;
+    this.gamestate = gamestate || null;
 
     this.source = null;
     this.nodes = null;
@@ -18,8 +18,9 @@ Maze.prototype.depthFirst = function(source, destination) {
 
     if(!source || !destination) return;
 
+    var self = this;
     var path = [];
-    var visiteds = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height);
+    var visiteds = Helpers.CreateMatrix(this.gamestate.mapSize.width, this.gamestate.mapSize.height);
 
     var traverse = function(cell) {
         if(cell === destination) {
@@ -27,8 +28,9 @@ Maze.prototype.depthFirst = function(source, destination) {
         }
         else {
             visiteds[cell.y][cell.x] = true;
-            for (var i = 0; i < cell.adjacents.length; i++) {
-                var adjacent = cell.adjacents[i];
+            for (var i = 0; i < cell.adjacentsIds.length; i++) {
+                var adjacentId = cell.adjacentsIds[i];
+                var adjacent = self.gamestate.getCellById(adjacentId);
 
                 if(!visiteds[adjacent.y][adjacent.x] && traverse(adjacent)) {
                     path.push({
@@ -59,6 +61,7 @@ Maze.prototype.depthFirst = function(source, destination) {
 Maze.prototype.breadthFirst = function(source, destination) {
 
     if(!source || !destination) return;
+    var self = this;
 
     var getNewNode = function() {
         var node = {};
@@ -84,8 +87,8 @@ Maze.prototype.breadthFirst = function(source, destination) {
         return path;
     };
 
-    var nodes = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height, getNewNode );
-    this.distances = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height );
+    var nodes = Helpers.CreateMatrix(this.gamestate.mapSize.width, this.gamestate.mapSize.height, getNewNode );
+    this.distances = Helpers.CreateMatrix(this.gamestate.mapSize.width, this.gamestate.mapSize.height );
 
     var queue = [];
 
@@ -100,9 +103,10 @@ Maze.prototype.breadthFirst = function(source, destination) {
             var cell = queue.shift();
             var cellNode = nodes[cell.y][cell.x];
 
-            for (var j = 0; j < cell.adjacents.length; j++) {
+            for (var j = 0; j < cell.adjacentsIds.length; j++) {
 
-                var adjacent = cell.adjacents[j];
+                var adjacentId = cell.adjacentsIds[j];
+                var adjacent = self.gamestate.getCellById(adjacentId);
                 var node = nodes[adjacent.y][adjacent.x];
 
                 if(node.distance === Infinity) {
@@ -129,6 +133,7 @@ Maze.prototype.breadthFirst = function(source, destination) {
 Maze.prototype.computeWeights = function(source) {
 
     if(!source) return;
+    var self = this;
 
     this.source = source;
 
@@ -140,8 +145,8 @@ Maze.prototype.computeWeights = function(source) {
         return node;
     };
 
-    this.nodes = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height, getNewNode );
-    this.distances = Helpers.CreateMatrix(this.map.mapSize.width, this.map.mapSize.height );
+    this.nodes = Helpers.CreateMatrix(this.gamestate.mapSize.width, this.gamestate.mapSize.height, getNewNode );
+    this.distances = Helpers.CreateMatrix(this.gamestate.mapSize.width, this.gamestate.mapSize.height );
 
     var queue = [];
 
@@ -155,9 +160,11 @@ Maze.prototype.computeWeights = function(source) {
             var cell = queue.shift();
             var cellNode = this.nodes[cell.y][cell.x];
 
-            for (var j = 0; j < cell.adjacents.length; j++) {
+            for (var j = 0; j < cell.adjacentsIds.length; j++) {
 
-                var adjacent = cell.adjacents[j];
+                var adjacentId = cell.adjacentsIds[j];
+                var adjacent = self.gamestate.getCellById(adjacentId);
+
                 var node = this.nodes[adjacent.y][adjacent.x];
 
                 if(node.distance === Infinity) {
@@ -218,8 +225,11 @@ Maze.prototype.getShortestRoutes = function(destination) {
 
         var crawlableAdjacents = [];
 
-        for (var j = 0; j < cell.adjacents.length; j++) {
-            var adjacent = cell.adjacents[j];
+        for (var j = 0; j < cell.adjacentsIds.length; j++) {
+
+            var adjacentId = cell.adjacentsIds[j];
+            var adjacent = self.gamestate.getCellById(adjacentId);
+
             var adjacentNode = self.nodes[adjacent.y][adjacent.x];
 
             if(adjacentNode.distance <= cellNode.distance) {
@@ -289,8 +299,10 @@ Maze.prototype.getAllRoutes = function(destination, lengthLimit, pathsLimit) {
 
         var crawlableAdjacents = [];
 
-        for (var j = 0; j < cell.adjacents.length; j++) {
-            var adjacent = cell.adjacents[j];
+        for (var j = 0; j < cell.adjacentsIds.length; j++) {
+
+            var adjacentId = cell.adjacentsIds[j];
+            var adjacent = self.gamestate.getCellById(adjacentId);
 
             var alreadyVisited = currentRoute.cellPath.indexOf(adjacent);
             if(alreadyVisited === -1) {

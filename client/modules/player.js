@@ -17,7 +17,7 @@ Player.prototype.setFrom = function (basePlayer) {
     this.pm = basePlayer.pm || this.pm || 0;
     this.invisibilityDuration = basePlayer.invisibilityDuration || this.invisibilityDuration || 0;
 
-    this.position = basePlayer.position || this.position || 0;
+    this.cellId = basePlayer.cellId || this.cellId || 0;
 };
 
 Player.prototype.toPublic = function () {

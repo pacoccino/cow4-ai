@@ -1,7 +1,7 @@
 var mockMap = require('./mockMap.json');
 var Cell = require('../client/modules/cell');
 var GameState = require('../client/modules/gamestate');
-var GameController = require('../client/modules/gamecontroller');
+var Player = require('./player');
 
 var chai = require('chai');
 var expect = chai.expect;
@@ -38,7 +38,7 @@ describe('Cell', function () {
         cell.id = 45;
         cell.ways = {top: 45, bottom: 12};
         cell.walls = {top: 855, bottom: 182};
-        cell.adjacents = [cell.ways, cell.walls];
+        cell.adjacentsIds = [13,14];
         cell.x = 2;
         cell.y = 3;
         cell.occupantId = 4;
@@ -55,9 +55,10 @@ describe('Cell', function () {
         expect(newCell.walls.top).to.equal(cell.walls.top);
         expect(newCell.walls.bottom).to.equal(cell.walls.bottom);
 
-        expect(newCell.adjacents).not.to.equal(cell.adjacents);
-        expect(newCell.adjacents.length).to.equal(cell.adjacents.length);
-        expect(newCell.adjacents[0]).to.equal(cell.adjacents[0]);
+        expect(newCell.adjacentsIds).not.to.equal(cell.adjacentsIds);
+        expect(newCell.adjacentsIds.length).to.equal(cell.adjacentsIds.length);
+        expect(newCell.adjacentsIds[0]).to.equal(cell.adjacentsIds[0]);
+        expect(newCell.adjacentsIds[1]).to.equal(cell.adjacentsIds[1]);
 
         expect(newCell.x).to.equal(cell.x);
         expect(newCell.y).to.equal(cell.y);

@@ -19,13 +19,9 @@ var GameController = function(communication) {
 GameController.prototype.processIa = function(callback) {
     var self = this;
 
-    this.iapoulet.getActions(function (actionsPoulet) {
-
-        self.ia.getActions(function(actions) {
-            callback(actions);
-        });
+    self.ia.getActions(function(actions) {
+        callback(actions);
     });
-
 };
 
 GameController.prototype.getTurnOrder = function(gameMap, callback) {
@@ -35,7 +31,7 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
     self.gamestate.fetchServerGameMap(gameMap);
 
     console.log('New turn : ', self.gamestate.currentTurn);
-    var casepoulet = self.gamestate.players.getPlayerCell(self.gamestate.players.getSheep());
+    var casepoulet = self.gamestate.getCellById(self.gamestate.players.getSheep().cellId);
     console.log('poulet :', casepoulet.x, casepoulet.y);
 
     var bench = Date.now();

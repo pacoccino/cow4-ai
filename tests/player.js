@@ -1,4 +1,5 @@
 var Player = require('../client/modules/player');
+var Cell = require('../client/modules/cell');
 
 var chai = require('chai');
 var expect = chai.expect;
@@ -28,7 +29,7 @@ describe('Player', function () {
         player.pm = 3;
         player.invisibilityDuration = 13;
 
-        player.position = 12;
+        player.cellId = 45;
 
         var newPlayer = player.clone();
 
@@ -43,7 +44,7 @@ describe('Player', function () {
         expect(newPlayer.pm).to.equal(player.pm);
         expect(newPlayer.invisibilityDuration).to.equal(player.invisibilityDuration);
 
-        expect(newPlayer.position).to.equal(player.position);
+        expect(newPlayer.cellId).to.equal(player.cellId);
     });
 
 });

@@ -21,7 +21,7 @@ IAVizRouter.get('/', function(req, res, next) {
 
 IAVizRouter.get('/getMap', function(req, res, next) {
 
-    res.json(map.getSerializableMap());
+    res.json(map.fetchedMap);
 });
 
 IAVizRouter.get('/getPlayers', function(req, res, next) {
@@ -33,7 +33,7 @@ IAVizRouter.get('/getPlayers', function(req, res, next) {
 IAVizRouter.get('/getDistances', function(req, res, next) {
 
 
-    var source = map.players.getPlayerCell(map.players.players[0].id);
+    var source = map.getCellById(map.players.players[0].cellId);
 
     maze.computeWeights(source);
 
@@ -43,8 +43,8 @@ IAVizRouter.get('/getDistances', function(req, res, next) {
 IAVizRouter.get('/getShortestRoutes', function(req, res, next) {
 
 
-    var source = map.players.getPlayerCell(map.players.players[0].id);
-    var destination = map.players.getPlayerCell(map.players.players[1].id);
+    var source = map.getCellById(map.players.players[0].cellId);
+    var destination = map.getCellById(map.players.players[1].cellId);
 
     maze.computeWeights(source);
     var routes = maze.getShortestRoutes(destination);
@@ -61,8 +61,8 @@ IAVizRouter.get('/getShortestRoutes', function(req, res, next) {
 IAVizRouter.get('/getAllRoutes', function(req, res, next) {
 
 
-    var source = map.players.getPlayerCell(map.players.players[0].id);
-    var destination = map.players.getPlayerCell(map.players.players[1].id);
+    var source = map.getCellById(map.players.players[0].cellId);
+    var destination = map.getCellById(map.players.players[1].cellId);
 
     maze.computeWeights(source);
     var routes = maze.getAllRoutes(destination);

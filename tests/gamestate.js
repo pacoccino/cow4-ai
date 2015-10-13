@@ -67,19 +67,10 @@ describe('GameState', function() {
         gamestate.fetchServerGameMap(mockMap);
 
         expect(gamestate.players.players.length).to.equal(3);
-        expect(gamestate.players.players[0].position.id).not.to.equal(0);
-        expect(gamestate.players.players[1].position.id).not.to.equal(0);
-        expect(gamestate.players.players[2].position.id).not.to.equal(0);
 
-        expect(gamestate.players.players[0].position.x).to.equal(0);
-        expect(gamestate.players.players[1].position.x).to.equal(gamestate.mapSize.width - 1);
-
-        expect(gamestate.players.players[0].position.y).to.equal(0);
-        expect(gamestate.players.players[1].position.y).to.equal(gamestate.mapSize.height - 1);
-
-        expect(gamestate.players.players[0].position.id).to.equal(1424090482209);
-        expect(gamestate.players.players[1].position.id).to.equal(1424090482833);
-        expect(gamestate.players.players[2].position.id).to.equal(1424090482510);
+        expect(gamestate.players.players[0].cellId).to.equal(1424090482209);
+        expect(gamestate.players.players[1].cellId).to.equal(1424090482833);
+        expect(gamestate.players.players[2].cellId).to.equal(1424090482510);
     });
 
     it('fetchCells', function() {
@@ -129,10 +120,10 @@ describe('GameState', function() {
         var bottomCase = gamestate.getCell(0,1);
         var rightCase = gamestate.getCell(1,0);
 
-        expect(firstCase.adjacents.length).to.equal(2);
+        expect(firstCase.adjacentsIds.length).to.equal(2);
 
-        expect(firstCase.adjacents[0]).to.equal(bottomCase);
-        expect(firstCase.adjacents[1]).to.equal(rightCase);
+        expect(firstCase.adjacentsIds[0]).to.equal(bottomCase.id);
+        expect(firstCase.adjacentsIds[1]).to.equal(rightCase.id);
     });
 
     it('clones 1', function() {
