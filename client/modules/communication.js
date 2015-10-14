@@ -1,11 +1,10 @@
 var EOF = '#end#';
 
 function Communication(socket) {
-    var self = this;
 
-    self.socket = socket;
+    this.socket = socket;
 
-    self.listener = null;
+    this.listener = null;
 
     var buffer = new Buffer(0);
 
@@ -14,22 +13,22 @@ function Communication(socket) {
         return (string.indexOf(EOF) !== -1);
     };
 
-    self.socket.on('data', function(receivedData) {
+    this.socket.on('data', function(receivedData) {
         buffer = Buffer.concat([buffer, receivedData]);
 
         if(bufferEnded()) {
 
-            var data = self.unFormat(buffer);
+            var data = this.unFormat(buffer);
 
-            if(self.listener) {
-                self.listener( data );
+            if(this.listener) {
+                this.listener( data );
             }
             else {
                 console.log('Data received without listener', data);
             }
             buffer = new Buffer(0);
         }
-    });
+    }.bind(this));
 }
 
 Communication.prototype.format = function(message) {
