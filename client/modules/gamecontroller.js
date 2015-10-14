@@ -72,7 +72,7 @@ GameController.prototype.listenGame = function(data) {
 };
 
 GameController.prototype.listen = function() {
-    this.communication.setListener(this.listenGame, this);
+    this.communication.setListener( this.listenGame.bind(this) );
 };
 
 var disconnect = function() {

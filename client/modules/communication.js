@@ -6,7 +6,6 @@ function Communication(socket) {
     self.socket = socket;
 
     self.listener = null;
-    self.listenerScope = null;
 
     var buffer = new Buffer(0);
 
@@ -23,7 +22,7 @@ function Communication(socket) {
             var data = self.unFormat(buffer);
 
             if(self.listener) {
-                self.listener.apply(self.listenerScope, [data]);
+                self.listener( data );
             }
             else {
                 console.log('Data received without listener', data);
@@ -58,14 +57,10 @@ Communication.prototype.send = function(data, callback) {
     this.socket.write(this.format(data), 'utf-8', callback);
 };
 
-Communication.prototype.setListener = function(listener, listenerScope) {
-    if(listener) {
-        this.listener = listener;
-        this.listenerScope = listenerScope;
-    }
-    else {
-        this.listener = null;
-    }
+Communication.prototype.setListener = function(listener) {
+    this.listener = listener || null;
 };
+
+Communication.prototype.MyId = "defaultId";
 
 module.exports = Communication;
