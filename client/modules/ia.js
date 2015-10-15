@@ -3,13 +3,13 @@ var Simulator = require('./simulator');
 var Action = require('./action');
 var Player = require('./player');
 var IApoulet = require('./iapoulet');
+var Strategy = require('./strategy');
 
 var sendDelay = 1;
 
 function IA(gamestate) {
     this.gamestate = gamestate;
-
-
+    this.strategy = new Strategy(this.gamestate);
     this.iapoulet = new IApoulet(this.gamestate);
 }
 
@@ -30,23 +30,27 @@ IA.prototype.getCleverActions = function(callback) {
 
     var self = this;
     var simulator = new Simulator(this.gamestate, this.iapoulet);
-    var maze = new Maze(this.gamestate);
-
     var actions = [];
+
     var me = this.gamestate.players.getMe();
-    var ennemy = this.gamestate.players.getEnnemy();
     var sheep = this.gamestate.players.getSheep();
 
-    var source = this.gamestate.getCellById(me.cellId);
-    maze.computeWeights(source);
+    var getItemAction = this.strategy.getItem();
+    if(getItemAction) {
+        actions.push(getItemAction);
+    }
+
+    var useItemActions = this.strategy.useItem();
+    if(useItemActions.length > 0) {
+        for (var i = 0; i < useItemActions.length; i++) {
+            actions.push(useItemActions[i]);
+        }
+    }
 
     var turnToEstimate = 5;
     simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
-        var estimatedSheep = estimatedGamestate.players.getSheep();
-        var estimatedSheepCell = estimatedGamestate.getCellById(estimatedSheep.cellId);
-        var destination = estimatedSheepCell;
 
-        var route = maze.getShortestRoute(destination);
+        var route = self.strategy.bestRoute(estimatedGamestate);
 
         if(route) {
             for(var i=0; i<me.pm; i++) {
@@ -65,7 +69,6 @@ IA.prototype.getCleverActions = function(callback) {
         }
 
         callback(actions);
-
     });
 };
 
