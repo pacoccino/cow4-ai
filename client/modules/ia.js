@@ -2,7 +2,6 @@ var Maze = require('./maze');
 var Simulator = require('./simulator');
 var Action = require('./action');
 var Player = require('./player');
-
 var IApoulet = require('./iapoulet');
 
 var sendDelay = 1;

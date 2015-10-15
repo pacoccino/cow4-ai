@@ -57,7 +57,7 @@ Communication.prototype.send = function(data, callback) {
 };
 
 Communication.prototype.setListener = function(listener) {
-    this.listener = listener || null;
+    this.listener = listener || null;
 };
 
 Communication.prototype.MyId = "defaultId";

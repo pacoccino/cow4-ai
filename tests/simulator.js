@@ -14,12 +14,26 @@ describe('Simulator', function() {
 
     beforeEach(function() {
         gamestate = new GameState();
-        gamestate.fetchServerGameMap(mockMap);
+        gamestate.fetchServerGameMap(mockMap)
         simulator = new Simulator(gamestate);
+    });
+
+    it('simulates 0 turn', function(done) {
+        simulator.simulateNTurns(0, function(estimatedGamestate) {
+
+            expect(estimatedGamestate.currentTurn).to.equal(0);
+
+            var estimatedSheepCell = estimatedGamestate.getCellById(estimatedGamestate.players.getSheep().cellId);
+            expect(estimatedSheepCell.x).to.equal(12);
+            expect(estimatedSheepCell.y).to.equal(12);
+            done();
+        })
     });
 
     it('simulates 1 turn', function(done) {
         simulator.simulateNTurns(1, function(estimatedGamestate) {
+
+            expect(estimatedGamestate.currentTurn).to.equal(1);
 
             var estimatedSheepCell = estimatedGamestate.getCellById(estimatedGamestate.players.getSheep().cellId);
             expect(estimatedSheepCell.x).to.equal(12);
@@ -31,8 +45,10 @@ describe('Simulator', function() {
     it('simulates 2 turns', function(done) {
         simulator.simulateNTurns(2, function(estimatedGamestate) {
 
+            expect(estimatedGamestate.currentTurn).to.equal(2);
+
             var estimatedSheepCell = estimatedGamestate.getCellById(estimatedGamestate.players.getSheep().cellId);
-            expect(estimatedSheepCell.x).to.equal(12);
+            expect(estimatedSheepCell.x).to.equal(11);
             expect(estimatedSheepCell.y).to.equal(12);
             done();
         })
@@ -40,8 +56,10 @@ describe('Simulator', function() {
     it('simulates 4 turns', function(done) {
         simulator.simulateNTurns(10, function(estimatedGamestate) {
 
+            expect(estimatedGamestate.currentTurn).to.equal(10);
+
             var estimatedSheepCell = estimatedGamestate.getCellById(estimatedGamestate.players.getSheep().cellId);
-            expect(estimatedSheepCell.x).to.equal(4);
+            expect(estimatedSheepCell.x).to.equal(3); // TODO verifier
             expect(estimatedSheepCell.y).to.equal(12);
             done();
         })
