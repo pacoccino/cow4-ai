@@ -14,6 +14,19 @@ function IA(gamestate) {
 }
 
 IA.prototype.getActions = function(callback) {
+    if(this.dumb === undefined) {
+        this.dumb = (this.gamestate.players.players.indexOf(this.gamestate.players.getMe()) === 1);
+    }
+
+    if(this.dumb) {
+        this.getDumbActions(callback);
+    }
+    else {
+        this.getCleverActions(callback);
+    }
+};
+
+IA.prototype.getCleverActions = function(callback) {
 
     var self = this;
     var simulator = new Simulator(this.gamestate, this.iapoulet);
@@ -22,6 +35,47 @@ IA.prototype.getActions = function(callback) {
     var actions = [];
     var me = this.gamestate.players.getMe();
     var ennemy = this.gamestate.players.getEnnemy();
+    var sheep = this.gamestate.players.getSheep();
+
+    var source = this.gamestate.getCellById(me.cellId);
+    maze.computeWeights(source);
+
+    var turnToEstimate = 5;
+    simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
+        var estimatedSheep = estimatedGamestate.players.getSheep();
+        var estimatedSheepCell = estimatedGamestate.getCellById(estimatedSheep.cellId);
+        var destination = estimatedSheepCell;
+
+        var route = maze.getShortestRoute(destination);
+
+        if(route) {
+            for(var i=0; i<me.pm; i++) {
+                var cell = route.cellPath[i];
+
+                // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
+                if(cell.occupantId !== null && cell.occupantId !== sheep.id) {
+                    break;
+                }
+
+                var action = new Action();
+                action.move(cell.id);
+
+                actions.push(action);
+            }
+        }
+
+        callback(actions);
+
+    });
+};
+
+IA.prototype.getDumbActions = function(callback) {
+
+    var maze = new Maze(this.gamestate);
+
+    var actions = [];
+
+    var me = this.gamestate.players.getMe();
     var sheep = this.gamestate.players.getSheep();
 
     var source = this.gamestate.getCellById(me.cellId);
@@ -46,21 +100,7 @@ IA.prototype.getActions = function(callback) {
         }
     }
 
-    var turnToEstimate = 5;
-    if(self.gamestate.currentTurn === 0) {
-        simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
-            var estimatedSheep = estimatedGamestate.players.getSheep();
-            var estimatedSheepCell = estimatedGamestate.getCellById(estimatedSheep.cellId);
-            console.log("estimated sheep position at turn " + (self.gamestate.currentTurn + turnToEstimate),
-                estimatedSheepCell.x, estimatedSheepCell.y);
-
-        });
-    }
-
-    setTimeout(function() {
-
-        callback(actions);
-    }, sendDelay);
+    callback(actions);
 };
 
 module.exports = IA;
