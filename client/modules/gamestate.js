@@ -2,7 +2,6 @@ var Player = require('./player');
 var Players = require('./players');
 var Cell = require('./cell');
 var Helpers = require('./helpers');
-var _ = require('lodash');
 
 function GameState() {
     this.serverGameMap = null;
@@ -52,10 +51,11 @@ GameState.prototype.getCellById = function(cellId) {
 
     for (var y = 0; y < map.length; y++) {
         var row = map[y];
-
-        var cell = _.find(row, {id:cellId});
-        if(cell) {
-            return cell;
+        for (var x = 0; x < row.length; x++) {
+            var cell = row[x];
+            if( cell.id === cellId){
+                return cell;
+            }
         }
     }
 
