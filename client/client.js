@@ -42,7 +42,7 @@ function launchConnection() {
 
             auth(function() {
                 var gamecontroller = new GameController(communication);
-                gamecontroller.listen.call(gamecontroller);
+                gamecontroller.listen();
             });
         });
 
