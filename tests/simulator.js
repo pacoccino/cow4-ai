@@ -2,6 +2,7 @@ var mockMap = require('./mockMapInit.json');
 var Communication = require('../client/modules/communication');
 var GameState = require('../client/modules/gamestate');
 var Simulator = require('../client/modules/simulator');
+var IApoulet = require('../client/modules/iapoulet');
 
 var chai = require('chai');
 var expect = chai.expect;
@@ -14,8 +15,9 @@ describe('Simulator', function() {
 
     beforeEach(function() {
         gamestate = new GameState();
-        gamestate.fetchServerGameMap(mockMap)
-        simulator = new Simulator(gamestate);
+        gamestate.fetchServerGameMap(mockMap);
+        var iapoulet = new IApoulet(gamestate);
+        simulator = new Simulator(gamestate, iapoulet);
     });
 
     it('simulates 0 turn', function(done) {

@@ -11,6 +11,10 @@ function IApoulet(gamestate) {
 
 }
 
+IApoulet.prototype.setGameState = function(gamestate) {
+    this.gamestate = gamestate;
+};
+
 IApoulet.prototype.generateMoveSequence = function() {
     firstMoveSequence = [];
     firstMoveSequence.push(null);
@@ -35,12 +39,12 @@ IApoulet.prototype.getActions = function(callback) {
 
     var nextCell = null;
 
-    // Les x premiers tours sont prédeterminés
+    // Les x premiers tours sont prï¿½determinï¿½s
     if(this.gamestate.currentTurn < firstMoveSequence.length) {
         nextCell = firstMoveSequence[this.gamestate.currentTurn];
     }
     else {
-        // On continue de fuir sur le chemin prévu
+        // On continue de fuir sur le chemin prï¿½vu
         if(sheepCell.adjacentsIds.length < 3) {
             if(sheepCell.adjacentsIds[0].id !== this.lastCell.id) {
                 nextCell = sheepCell.adjacentsIds[0];
