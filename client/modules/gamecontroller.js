@@ -26,19 +26,18 @@ GameController.prototype.processIa = function(callback) {
 
 GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
-    var self = this;
 
-    self.gamestate.fetchServerGameMap(gameMap);
+    this.gamestate.fetchServerGameMap(gameMap);
 
-    console.log('New turn : ', self.gamestate.currentTurn);
-    var casepoulet = self.gamestate.getCellById(self.gamestate.players.getSheep().cellId);
+    console.log('New turn : ', this.gamestate.currentTurn);
+    var casepoulet = this.gamestate.getCellById(this.gamestate.players.getSheep().cellId);
     console.log('poulet :', casepoulet.x, casepoulet.y);
 
     var bench = Date.now();
 
-    self.processIa(function(actions) {
+    this.processIa(function(actions) {
 
-        var IAinfo = self.gamestate.players.getMe().toPublic();
+        var IAinfo = this.gamestate.players.getMe().toPublic();
 
         var response = {
             type: 'turnResult',
@@ -47,32 +46,31 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
         };
 
         var time = Date.now() - bench;
-        self.benchMark.push(time);
-        var avg = _.round(_.sum(self.benchMark)/self.benchMark.length);
+        this.benchMark.push(time);
+        var avg = _.round(_.sum(this.benchMark)/this.benchMark.length);
 
         console.log('Turn computed, took', time, "ms, average " + avg + "ms.");
         callback(response);
-    });
+    }.bind(this));
 };
 
-GameController.prototype.listenGame = function(data) {
+GameController.prototype.listenGame = function(servRes) {
 
-    var self = this;
-    if(data.type && data.type === 'getTurnOrder') {
+    if(servRes.type && servRes.type === 'getTurnOrder') {
 
-        self.getTurnOrder(data.data, function(turnOrder) {
-            self.communication.send(turnOrder);
-        });
+        this.getTurnOrder(servRes.data, function(turnOrder) {
+            this.communication.send(turnOrder);
+        }.bind(this));
 
-        self.runTimeout();
+        this.runTimeout();
     }
     else {
-        console.log("Message recu inconnu:", data)
+        console.log("Message recu inconnu:", servRes)
     }
 };
 
 GameController.prototype.listen = function() {
-    this.communication.setListener(this.listenGame, this);
+    this.communication.setListener( this.listenGame.bind(this) );
 };
 
 var disconnect = function() {
