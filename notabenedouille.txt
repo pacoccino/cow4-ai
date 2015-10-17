@@ -1,0 +1,4 @@
+bonus-1 : potion : goutte
+bonus-2 : trap : filets
+bonus-3 : parfum : etoile
+bonus-4 : pm : fleches
