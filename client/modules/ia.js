@@ -9,8 +9,11 @@ var sendDelay = 1;
 
 function IA(gamestate) {
     this.gamestate = gamestate;
-    this.strategy = new Strategy(this.gamestate);
     this.iapoulet = new IApoulet(this.gamestate);
+    this.simulator = new Simulator(this.gamestate, this.iapoulet);
+    this.strategy = new Strategy(this.gamestate, this.simulator);
+
+    this.actions = [];
 }
 
 IA.prototype.getActions = function(callback) {
@@ -26,50 +29,32 @@ IA.prototype.getActions = function(callback) {
     }
 };
 
-IA.prototype.getCleverActions = function(callback) {
+IA.prototype.appendActions = function(actionFunction) {
 
+    if(!actionFunction) return;
     var self = this;
-    var simulator = new Simulator(this.gamestate, this.iapoulet);
-    var actions = [];
 
-    var me = this.gamestate.players.getMe();
-    var sheep = this.gamestate.players.getSheep();
-
-    var getItemAction = this.strategy.getItem();
-    if(getItemAction) {
-        actions.push(getItemAction);
-    }
-
-    var useItemActions = this.strategy.useItem();
-    if(useItemActions.length > 0) {
-        for (var i = 0; i < useItemActions.length; i++) {
-            actions.push(useItemActions[i]);
-        }
-    }
-
-    var turnToEstimate = 5;
-    simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
-
-        var route = self.strategy.bestRoute(estimatedGamestate);
-
-        if(route) {
-            for(var i=0; i<me.pm; i++) {
-                var cell = route.cellPath[i];
-
-                // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
-                if(cell.occupantId !== null && cell.occupantId !== sheep.id) {
-                    break;
-                }
-
-                var action = new Action();
-                action.move(cell.id);
-
-                actions.push(action);
+    actionFunction(function(actions) {
+        if(actions instanceof Array) {
+            for (var i = 0; i < actions.length; i++) {
+                self.actions.push(actions[i]);
             }
         }
-
-        callback(actions);
+        else {
+            self.actions.push(actions);
+        }
     });
+};
+
+IA.prototype.getCleverActions = function(callback) {
+
+    this.actions = [];
+
+    this.appendActions(this.strategy.getItem.bind(this.strategy));
+    this.appendActions(this.strategy.useItem.bind(this.strategy));
+    this.appendActions(this.strategy.move.bind(this.strategy));
+
+    callback(this.actions);
 };
 
 IA.prototype.getDumbActions = function(callback) {
@@ -88,11 +73,12 @@ IA.prototype.getDumbActions = function(callback) {
     var route = maze.getShortestRoute(destination);
 
     if(route) {
+
         for(var i=0; i<me.pm; i++) {
             var cell = route.cellPath[i];
 
             // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
-            if(cell.occupantId !== null && cell.occupantId !== sheep.id) {
+            if(!cell || cell.occupantId !== null && cell.occupantId !== sheep.id) {
                 break;
             }
 

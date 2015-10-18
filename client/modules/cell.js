@@ -78,6 +78,7 @@ Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {
     this.y = y;
     this.occupantId = serverCell.occupant ? serverCell.occupant.id : null;
     this.item = serverCell.item || null;
+    if(this.item) this.item.cellId = this.id;
 };
 
 module.exports = Cell;

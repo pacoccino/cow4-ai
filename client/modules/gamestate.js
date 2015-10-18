@@ -66,8 +66,6 @@ GameState.prototype.processGameMap = function() {
 
     this.fetchPlayers();
 
-    this.allItems = [];
-
     for (var y = 0; y < this.mapSize.height; y++) {
         for (var x = 0; x < this.mapSize.height; x++) {
             var serverCell = this.serverGameMap.cells[y][x];
@@ -115,12 +113,7 @@ GameState.prototype.concatItems = function(cell) {
 
     if(!cell.item) return;
 
-    this.allItems.push(
-        {
-            cell: cell,
-            item: cell.item
-        }
-    );
+    this.allItems.push(cell.item);
 };
 
 
