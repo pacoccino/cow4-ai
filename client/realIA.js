@@ -12,4 +12,6 @@ var profile = {
 Config.profile = profile;
 Config.IA = IA;
 
+Config.real = true;
+
 Client.startClient();

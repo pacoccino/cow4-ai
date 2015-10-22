@@ -2,6 +2,7 @@ var _ = require('lodash');
 var Player = require('./player');
 var Players = require('./players');
 var Cell = require('./cell');
+var Logger = require('./logger');
 var Helpers = require('./helpers');
 
 function GameState() {
@@ -22,6 +23,7 @@ function GameState() {
 
 
 GameState.prototype.fetchServerGameMap = function(serverGameMap) {
+    Logger.writeMap(serverGameMap);
     this.serverGameMap = serverGameMap;
 
     this.currentTurn = serverGameMap.currentTurn;

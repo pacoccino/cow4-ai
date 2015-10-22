@@ -96,6 +96,7 @@ Strategy.prototype.useItem = function() {
             var action = new Action();
             action.useItem('parfum');
             console.log('use parfum');
+            actions.push(action);
         }
     }
 
