@@ -1,7 +1,6 @@
 var GameState = require('./gamestate');
 var Action = require('./action');
-var IA = require('./ia');
-var IApoulet = require('./iapoulet');
+var Config = require('./config');
 var _ = require('lodash');
 
 var GameController = function(communication) {
@@ -9,8 +8,7 @@ var GameController = function(communication) {
 
     this.gamestate = new GameState();
 
-    this.ia = new IA(this.gamestate);
-    this.iapoulet = new IApoulet(this.gamestate);
+    this.ia = new Config.IA(this.gamestate);
 
     this.benchMark = [];
 };
@@ -31,7 +29,9 @@ GameController.prototype.getTurnOrder = function(gameMap, callback) {
 
     console.log('New turn : ', this.gamestate.currentTurn);
     var casepoulet = this.gamestate.getCellById(this.gamestate.players.getSheep().cellId);
+    var caseennemy = this.gamestate.getCellById(this.gamestate.players.getEnnemy().cellId);
     console.log('poulet :', casepoulet.x, casepoulet.y);
+    console.log('enemmy :', caseennemy.x, caseennemy.y);
 
     var bench = Date.now();
 

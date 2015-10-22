@@ -5,9 +5,10 @@ var Communication = require('./modules/communication');
 var Config = require('./modules/config');
 var GameController = require('./modules/gamecontroller');
 
-var communication;
+var Client = {};
+Client.communication = null;
 
-var auth = function(callback) {
+Client.auth = function(callback) {
     var request = {
         type:'authenticate',
         name: Config.profile.name,
@@ -29,31 +30,31 @@ var auth = function(callback) {
         }
     };
 
-    communication.setListener(authListener);
+    Client.communication.setListener(authListener);
 
-    communication.send(request);
+    Client.communication.send(request);
 };
 
-function launchConnection() {
+Client.launchConnection = function () {
     try {
-        var client = net.connect(Config.gameServer, function() {
-            communication = new Communication(client);
+        var socket = net.connect(Config.gameServer, function() {
+            Client.communication = new Communication(socket);
             console.log('Connected to server ! (' + Config.gameServer.host + ':' + Config.gameServer.port + ')');
 
-            auth(function() {
-                var gamecontroller = new GameController(communication);
+            Client.auth(function() {
+                var gamecontroller = new GameController(Client.communication);
                 gamecontroller.listen();
             });
         });
 
-        client.on('error', function(e) {
+        socket.on('error', function(e) {
             switch(e.code) {
                 case 'ECONNRESET':
-                    console.error('Served went down, stopping');
+                    console.error('Server went down, stopping');
                     process.exit(0);
                     break;
                 case 'ECONNREFUSED':
-                    console.error('Served connection impossible');
+                    console.error('Server connection impossible');
                     process.exit(0);
                     break;
                 default:
@@ -61,7 +62,7 @@ function launchConnection() {
             }
         });
 
-        client.on('close', function() {
+        socket.on('close', function() {
             console.log('Connection closed.');
         });
 
@@ -69,9 +70,9 @@ function launchConnection() {
     catch(e) {
         console.error('Unable to connect', e);
     }
-}
+};
 
-function askIA(callback) {
+Client.askIA = function(callback) {
 
     if(!Config.IA && Config.IAs.length > 1) {
         inquirer.prompt([
@@ -89,13 +90,10 @@ function askIA(callback) {
     else {
         callback(Config.IAs[Config.IA].value);
     }
-}
+};
 
-function startClient() {
-        askIA(function(ia) {
-            Config.selectedIA = ia;
-            launchConnection();
-        });
-}
+Client.startClient = function() {
+    Client.launchConnection();
+};
 
-startClient();
+module.exports = Client;
