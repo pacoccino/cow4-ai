@@ -37,7 +37,7 @@ IA.prototype.getActions = function(callback) {
         }
     }
 
-    var turnToEstimate = 1;
+    var turnToEstimate = 5;
     simulator.simulateNTurns(turnToEstimate, function(estimatedGamestate) {
 
         var casepoulet = estimatedGamestate.getCellById(estimatedGamestate.players.getSheep().cellId);

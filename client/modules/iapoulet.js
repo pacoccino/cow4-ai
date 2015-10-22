@@ -7,7 +7,6 @@ var firstMoveSequence = null;
 
 function IApoulet(gamestate) {
     this.gamestate = gamestate;
-    this.players = this.gamestate.players;
 
 }
 
@@ -28,9 +27,9 @@ IApoulet.prototype.getActions = function(callback) {
 
     if(!firstMoveSequence) this.generateMoveSequence();
 
-    var me = this.players.getMe();
-    var ennemy = this.players.getEnnemy();
-    var sheep = this.players.getSheep();
+    var me = this.gamestate.players.getMe();
+    var ennemy = this.gamestate.players.getEnnemy();
+    var sheep = this.gamestate.players.getSheep();
 
     var myCell = this.gamestate.getCellById(me.cellId);
     var ennemyCell = this.gamestate.getCellById(ennemy.cellId);
