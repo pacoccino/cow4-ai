@@ -17,7 +17,6 @@ IApoulet.prototype.setGameState = function(gamestate) {
 
 IApoulet.prototype.generateMoveSequence = function() {
     firstMoveSequence = [];
-    firstMoveSequence.push(null);
     for (var i = 1; i < 13; i++) {
         var cell = this.gamestate.getCell(12 - i, 12);
         firstMoveSequence.push(cell.id);
