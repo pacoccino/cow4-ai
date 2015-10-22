@@ -41,12 +41,13 @@ Communication.prototype.format = function(message) {
 
 Communication.prototype.unFormat = function(buffer) {
     var message = buffer.toString();
-    if(message.indexOf(EOF) === -1) {
+    var indexEof = message.indexOf(EOF);
+    if(indexEof === -1) {
         console.error('Incorrect message');
         return {};
     }
 
-    var truncMess = message.substr(0, message.length - EOF.length);
+    var truncMess = message.substr(0, indexEof);
 
     return JSON.parse(truncMess);
 };
