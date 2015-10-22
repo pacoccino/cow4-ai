@@ -55,14 +55,14 @@ Cell.prototype.fetchServerCell = function (serverCell, x, y, map) {
     var findAdjacents = function(cell) {
         var adjacentsIds = [];
 
-        if(cell.left) {
-            adjacentsIds.push(cell.left);
-        }
         if(cell.top) {
             adjacentsIds.push(cell.top);
         }
         if(cell.bottom) {
             adjacentsIds.push(cell.bottom);
+        }
+        if(cell.left) {
+            adjacentsIds.push(cell.left);
         }
         if(cell.right) {
             adjacentsIds.push(cell.right);
