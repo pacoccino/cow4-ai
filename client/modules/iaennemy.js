@@ -3,9 +3,14 @@ var Simulator = require('./simulator');
 var Action = require('./action');
 var Player = require('./player');
 
-function IAEnnemy(gamestate) {
+function IAEnnemy(gamestate, emulate) {
     this.gamestate = gamestate;
+    this.emulate = emulate ? true : false;
 }
+
+IAEnnemy.prototype.setGameState = function(gamestate) {
+    this.gamestate = gamestate;
+};
 
 IAEnnemy.prototype.getActions = function(callback) {
 
@@ -14,6 +19,10 @@ IAEnnemy.prototype.getActions = function(callback) {
     var actions = [];
 
     var me = this.gamestate.players.getMe();
+    if(this.emulate) {
+        me = this.gamestate.players.getEnnemy();
+    }
+
     var sheep = this.gamestate.players.getSheep();
 
     var source = this.gamestate.getCellById(me.cellId);
@@ -33,7 +42,6 @@ IAEnnemy.prototype.getActions = function(callback) {
 
             var action = new Action();
             action.move(cell.id);
-            console.log(cell.x, cell.y);
 
             actions.push(action);
         }

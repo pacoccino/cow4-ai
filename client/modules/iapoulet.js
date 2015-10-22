@@ -38,24 +38,36 @@ IApoulet.prototype.getActions = function(callback) {
 
     var nextCell = null;
 
+    var maze = new Maze(this.gamestate);
+
     // Les x premiers tours sont pr�determin�s
     if(this.gamestate.currentTurn < firstMoveSequence.length) {
         nextCell = firstMoveSequence[this.gamestate.currentTurn];
     }
     else {
         // On continue de fuir sur le chemin pr�vu
-        if(sheepCell.adjacentsIds.length < 3) {
-            if(sheepCell.adjacentsIds[0].id !== this.lastCell.id) {
+        if(sheepCell.adjacentsIds.length == 2) {
+
+            maze.computeWeights(sheepCell);
+            var routeToLastChoice = maze.getShortestRoute(this.lastChoiceCell);
+
+            // On va dans le sens contraire de la derniere fois ou on a choisi une route
+            if(sheepCell.adjacentsIds[0] !== routeToLastChoice.cellPath[0].id) {
                 nextCell = sheepCell.adjacentsIds[0];
             }
             else {
                 nextCell = sheepCell.adjacentsIds[1];
             }
         }
+        // ben mon gars tu vas la ou tu peux !
+        else if(sheepCell.adjacentsIds.length === 1) {
+            nextCell = sheepCell.adjacentsIds[0];
+        }
         // On trouve un nouveau chemin
         else {
 
-            var maze = new Maze(this.gamestate);
+            this.lastChoiceCell = sheepCell;
+
             maze.computeWeights(sheepCell);
 
             var routeToMe = maze.getShortestRoute(myCell);
@@ -73,10 +85,12 @@ IApoulet.prototype.getActions = function(callback) {
                     break;
                 }
             }
+            if(!nextCell && adjacentsIds[0] !== undefined) {
+                nextCell = adjacentsIds[0];
+            }
         }
     }
 
-    this.lastCell = sheepCell;
 
     // Execution
     var actions = [];

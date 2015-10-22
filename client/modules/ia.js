@@ -12,7 +12,7 @@ function IA(gamestate) {
     this.gamestate = gamestate;
     this.strategy = new Strategy(this.gamestate);
     this.iapoulet = new IApoulet(this.gamestate);
-    this.iaennemy = new IAennemy(this.gamestate);
+    this.iaennemy = new IAennemy(this.gamestate, true);
 }
 
 
@@ -58,7 +58,6 @@ IA.prototype.getActions = function(callback) {
 
                 var action = new Action();
                 action.move(cell.id);
-                console.log(cell.x, cell.y);
 
                 actions.push(action);
             }
