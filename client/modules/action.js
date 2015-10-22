@@ -8,6 +8,9 @@ function Action() {
 
 Action.prototype.move = function(cellId) {
     this.type = 'move';
+    if(!cellId) {
+        console.log("no cellId defined for move");
+    }
     this.value = cellId;
 };
 
@@ -16,6 +19,9 @@ Action.prototype.getItem = function() {
 };
 Action.prototype.useItem = function(itemType) {
     this.type = 'useItem';
+    if(!itemType) {
+        console.log("no itemTYpe defined for use");
+    }
     this.value = itemType;
 };
 
