@@ -1,3 +1,4 @@
+var _ = require('lodash');
 var Player = require('./player');
 var Players = require('./players');
 var Cell = require('./cell');
@@ -115,12 +116,9 @@ GameState.prototype.concatItems = function(cell) {
 
     if(!cell.item) return;
 
-    this.allItems.push(
-        {
-            cell: cell,
-            item: cell.item
-        }
-    );
+    var item = _.clone(cell.item);
+    item.cell = cell;
+    this.allItems.push(item);
 };
 
 
