@@ -1,6 +1,7 @@
 var _ = require('lodash');
 var Maze = require('./maze');
 var Action = require('./action');
+var Constants = require('./constants');
 
 function Strategy(gamestate) {
     this.gamestate = gamestate;
@@ -18,16 +19,33 @@ Strategy.prototype.lazyRouteToSheep = function(estimatedGamestate) {
 
     var routes = this.maze.getShortestRoutes(estimatedSheepCell);
 
-    var bestRoute = routes[0];
-    var bestRouteItems = 0;
-    for (var i = 0; i < routes.length; i++) {
-        var route = routes[i];
-        var nbItems = route.items.length;
-        if(nbItems > bestRouteItems) {
-            bestRoute = route;
+    var bestRoute = null;
+    var bestRouteItems = -1;
+
+    for (var j = 0; j < routes.length; j++) {
+        var route = routes[j];
+
+        for (var i = 0; i < route.cellPath.length-1; i++) {
+            var cell = route.cellPath[i];
+
+            // La route contient l'ennemi
+            if(cell.occupantId === this.gamestate.getEnnemy().id)
+                continue;
+
+            if(route.items.length > bestRouteItems)
+                bestRoute = route;
         }
     }
-    return bestRoute;
+
+    if(bestRoute) {
+
+        var truncRoute = new Route(bestRoute.source, bestRoute.cellPath[0]);
+        truncRoute.addStep(bestRoute.cellPath[0]);
+        return truncRoute;
+    }
+    else {
+        return null;
+    }
 };
 
 Strategy.prototype.routeToItem = function(estimatedGamestate) {
@@ -72,6 +90,8 @@ Strategy.prototype.routeToItem = function(estimatedGamestate) {
 
 Strategy.prototype.tryIfCanCatch = function() {
 
+    if(this.forcedRoute) return;
+
     var sheep = this.gamestate.players.getSheep();
     var sheepCell = this.gamestate.getCellById(sheep.cellId);
     var routesToSheep = this.maze.getShortestRoutes(sheepCell);
@@ -97,6 +117,18 @@ Strategy.prototype.tryIfCanCatch = function() {
     }
 };
 
+Strategy.prototype.findObjectives = function() {
+
+    if(this.forcedRoute) return;
+
+    var me = this.gamestate.players.getMe();
+    var myCell = this.gamestate.getCellById(me);
+
+    if(me.pm < Constants.MAX_PM && Math.random() * 10 < 5) {
+        this.forcedRoute = new Route();
+    }
+};
+
 Strategy.prototype.bestRoute = function(estimatedGamestate) {
 
     var me = this.gamestate.players.getMe();
@@ -107,8 +139,11 @@ Strategy.prototype.bestRoute = function(estimatedGamestate) {
     this.maze.computeWeights(source);
 
     this.tryIfCanCatch();
+    this.findObjectives();
+
 
     if(this.forcedRoute) return this.forcedRoute;
+
 
     switch(this.actualStrategy) {
         case 'lazySheep':
@@ -134,6 +169,7 @@ Strategy.prototype.useItem = function() {
         }
     }
 
+    Action.executeOnGamestate(actions, this.gamestate, me);
     return actions;
 };
 
@@ -145,6 +181,7 @@ Strategy.prototype.getItem = function() {
     if(myCell.item) {
         var action = new Action();
         action.getItem();
+        Action.executeOnGamestate(action, this.gamestate, me);
 
         console.log('get item:', myCell.item.type);
         return action;
