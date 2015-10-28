@@ -8,6 +8,8 @@ var firstMoveSequence = null;
 function IApoulet(gamestate) {
     this.gamestate = gamestate;
 
+    this.lastIntersection = null;
+    this.nextIntersection = null;
 }
 
 IApoulet.prototype.setGameState = function(gamestate) {
@@ -35,37 +37,37 @@ IApoulet.prototype.getActions = function(callback) {
     var ennemyCell = this.gamestate.getCellById(ennemy.cellId);
     var sheepCell = this.gamestate.getCellById(sheep.cellId);
 
-    var nextCell = null;
+    var nextCellId = null;
 
     var maze = new Maze(this.gamestate);
 
     // Les x premiers tours sont pr�determin�s
     if(this.gamestate.currentTurn < firstMoveSequence.length) {
-        nextCell = firstMoveSequence[this.gamestate.currentTurn];
+        nextCellId = firstMoveSequence[this.gamestate.currentTurn];
     }
     else {
         // On continue de fuir sur le chemin pr�vu
         if(sheepCell.adjacentsIds.length == 2) {
 
             maze.computeWeights(sheepCell);
-            var routeToLastChoice = maze.getShortestRoute(this.lastChoiceCell);
+            var routeToLastChoice = maze.getShortestRoute(this.lastIntersection);
 
             // On va dans le sens contraire de la derniere fois ou on a choisi une route
             if(sheepCell.adjacentsIds[0] !== routeToLastChoice.cellPath[0].id) {
-                nextCell = sheepCell.adjacentsIds[0];
+                nextCellId = sheepCell.adjacentsIds[0];
             }
             else {
-                nextCell = sheepCell.adjacentsIds[1];
+                nextCellId = sheepCell.adjacentsIds[1];
             }
         }
         // ben mon gars tu vas la ou tu peux !
         else if(sheepCell.adjacentsIds.length === 1) {
-            nextCell = sheepCell.adjacentsIds[0];
+            nextCellId = sheepCell.adjacentsIds[0];
         }
         // On trouve un nouveau chemin
         else {
 
-            this.lastChoiceCell = sheepCell;
+            this.lastIntersection = sheepCell;
 
             maze.computeWeights(sheepCell);
 
@@ -80,13 +82,16 @@ IApoulet.prototype.getActions = function(callback) {
                     continue;
                 }
                 else {
-                    nextCell = adjacentId;
+                    nextCellId = adjacentId;
                     break;
                 }
             }
-            if(!nextCell && adjacentsIds[0] !== undefined) {
-                nextCell = adjacentsIds[0];
+            if(!nextCellId && adjacentsIds[0] !== undefined) {
+                nextCellId = adjacentsIds[0];
             }
+            var nextCell = this.gamestate.getCellById(nextCell);
+
+            this.nextIntersection = this.getNextIntersection(this.lastIntersection, nextCell);
         }
     }
 
@@ -94,14 +99,30 @@ IApoulet.prototype.getActions = function(callback) {
     // Execution
     var actions = [];
 
-    if(nextCell) {
+    if(nextCellId) {
         var action = new Action();
-        action.move(nextCell);
+        action.move(nextCellId);
 
         actions.push(action);
     }
 
     callback(actions);
+};
+
+IApoulet.prototype.getNextIntersection = function(fromCell, byCell) {
+    var result = null;
+
+    var adjacentsIds = byCell.adjacentsIds;
+    if (adjacentsIds.length == 1 || adjacentsIds.length > 2) {
+        result = byCell;
+    } else {
+        var nextCell = this.gamestate.getCellById(adjacentsIds[0]);
+        if (nextCell.id == fromCell.id) {
+            nextCell =this.gamestate.getCellById(adjacentsIds[1]);
+        }
+        result = this.getNextIntersection(byCell, nextCell);
+    }
+    return result;
 };
 
 module.exports = IApoulet;
