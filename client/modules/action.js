@@ -62,6 +62,12 @@ Action.prototype.execute = function(gamestate, player) {
         case 'move':
             executeMove(this.value, gamestate, player);
             break;
+        case 'useItem':
+            executeUse(this.value, gamestate, player);
+            break;
+        case 'getItem':
+            executeGet(gamestate, player);
+            break;
     }
 };
 
@@ -102,6 +108,30 @@ var executeMove = function(target, gamestate, player) {
     fromCell.occupantId = null;
     destCell.occupantId = player.id;
     player.cellId = destCell.id;
+};
+
+var executeUse = function(itemId, gamestate, player) {
+    var gsPlayer = this.gamestate.players.getPlayerById(player.id);
+
+    var itemIndex = _.findIndex(gsPlayer, {type: itemId});
+    if(itemIndex !== -1) {
+        gsPlayer.items.splice(itemIndex, 1);
+    }
+    // TODO Action en fonction du type
+};
+
+var executeGet = function(gamestate, player) {
+    var gsPlayer = this.gamestate.players.getPlayerById(player.id);
+    var playerCell = this.gamestate.getCellById(gsPlayer.cellId);
+
+    var item = playerCell.item;
+    gsPlayer.items.push(item);
+
+    var itemIndexAllItems = _.findIndex(gamestate.allItems, {type: item.type});
+    if(itemIndexAllItems !== -1) {
+        gamestate.allItems.splice(itemIndexAllItems, 1);
+    }
+    playerCell.item = null;
 };
 
 Action.transformForServer = function(actions) {
