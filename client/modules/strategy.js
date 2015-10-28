@@ -6,21 +6,17 @@ function Strategy(gamestate) {
     this.gamestate = gamestate;
 
     this.actualStrategy = 'item';
+
+    this.maze = null;
+    this.forcedRoute = null;
 }
 
-Strategy.prototype.routeToSheep = function(estimatedGamestate) {
-
-    var maze = new Maze(this.gamestate);
-
-    var me = this.gamestate.players.getMe();
-
-    var source = this.gamestate.getCellById(me.cellId);
-    maze.computeWeights(source);
+Strategy.prototype.lazyRouteToSheep = function(estimatedGamestate) {
 
     var estimatedSheep = estimatedGamestate.players.getSheep();
     var estimatedSheepCell = estimatedGamestate.getCellById(estimatedSheep.cellId);
 
-    var routes = maze.getShortestRoutes(estimatedSheepCell);
+    var routes = this.maze.getShortestRoutes(estimatedSheepCell);
 
     var bestRoute = routes[0];
     var bestRouteItems = 0;
@@ -68,17 +64,55 @@ Strategy.prototype.routeToItem = function(estimatedGamestate) {
     }
     else {
         if(route.cellPath.length === 1) {
-            this.actualStrategy = 'sheep';
+            this.actualStrategy = 'lazySheep';
         }
         return route;
     }
 };
 
+Strategy.prototype.tryIfCanCatch = function() {
+
+    var sheep = this.gamestate.players.getSheep();
+    var sheepCell = this.gamestate.getCellById(sheep.cellId);
+    var routesToSheep = this.maze.getShortestRoutes(sheepCell);
+
+    for (var j = 0; j < routesToSheep.length; j++) {
+        var route = routesToSheep[j];
+
+        // La route vers le poulet est trop longue
+        if(route.cellPath.length > this.gamestate.getMe().pm)
+            continue;
+
+        for (var i = 0; i < route.cellPath.length-1; i++) {
+            var cell = route.cellPath[i];
+
+            // La route contient l'ennemi
+            if(cell.occupantId === this.gamestate.getEnnemy().id)
+                continue;
+
+            // La route est correcte
+            this.forcedRoute = route;
+            break;
+        }
+    }
+};
+
 Strategy.prototype.bestRoute = function(estimatedGamestate) {
 
+    var me = this.gamestate.players.getMe();
+    var source = this.gamestate.getCellById(me.cellId);
+
+    this.forcedRoute = null;
+    this.maze = new Maze(this.gamestate);
+    this.maze.computeWeights(source);
+
+    this.tryIfCanCatch();
+
+    if(this.forcedRoute) return this.forcedRoute;
+
     switch(this.actualStrategy) {
-        case 'sheep':
-            return this.routeToSheep(estimatedGamestate);
+        case 'lazySheep':
+            return this.lazyRouteToSheep(estimatedGamestate);
         case 'item':
             return this.routeToItem(estimatedGamestate);
     }
