@@ -5,8 +5,8 @@ var IA = require('./modules/ia');
 
 var profile = {
     name: 'Skuzer',
-    avatar:'https://i.imgflip.com/t257l.jpg',
-    token: 'ed4ccb622d819fb6b35133db689ad97e',
+    avatar:'',
+    token: '',
     profil: Constants.GameProfiles.MASTER_OF_COINS
 };
 
