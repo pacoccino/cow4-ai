@@ -1,7 +1,7 @@
 var Config = {};
 
 Config.gameServer = {
-    host: 'localhost',
+    host: 'qualif.codeofwar.net',
     port: 8127
 };
 
