@@ -32,7 +32,9 @@ IAEnnemy.prototype.getActions = function(callback) {
     var route = maze.getShortestRoute(destination);
 
     if(route) {
-        for(var i=0; i<me.pm; i++) {
+        for(var i=0; i<route.cellPath.length; i++) {
+            if(i === me.pm) break;
+
             var cell = route.cellPath[i];
 
             // si il y a un joueur, on ne va pas sur la case et on arrete de se deplacer
