@@ -74,6 +74,7 @@ GameController.prototype.listen = function() {
 };
 
 var disconnect = function() {
+    console.error("Timeout from server, exiting ...");
     process.exit(-1);
 };
 
