@@ -57,6 +57,9 @@ IA.prototype.getActions = function(callback) {
                 if(cell.occupantId !== null && cell.occupantId !== sheep.id) {
                     break;
                 }
+                if(cell.occupantId === sheep.id) {
+                    console.log("J'a manger eul poulet")
+                }
 
                 var action = new Action();
                 action.move(cell.id);
