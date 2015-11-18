@@ -1,5 +1,5 @@
 var _ = require('lodash');
-var Helpers = require('./helpers');;
+var Helpers = require('./helpers');
 var Route = require('./route');
 
 function Maze(gamestate) {
@@ -253,7 +253,7 @@ Maze.prototype.getShortestRoutes = function(destination) {
             continuePathFrom(crawlableAdjacents[0], currentRoute);
         }
         else {
-            // N'est pas censé arriver (sinon adjacentNode.distance > cellNode.distance)
+            // N'est pas censï¿½ arriver (sinon adjacentNode.distance > cellNode.distance)
             console.log("crawlableAdjacents.length === 0");
             routes.splice(routes.indexOf(currentRoute), 1);
         }
@@ -271,7 +271,7 @@ Maze.prototype.getShortestRoutes = function(destination) {
     return routes;
 };
 
-// Trouve toutes les routes. Obligé d'imposer une limite sinon ca peut durer tres longtemps
+// Trouve toutes les routes. Obligï¿½ d'imposer une limite sinon ca peut durer tres longtemps
 Maze.prototype.getAllRoutes = function(destination, lengthLimit, pathsLimit) {
 
     if(!this.source) {

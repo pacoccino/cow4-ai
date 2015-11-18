@@ -89,7 +89,7 @@ IApoulet.prototype.getActions = function(callback) {
             if(!nextCellId && adjacentsIds[0] !== undefined) {
                 nextCellId = adjacentsIds[0];
             }
-            var nextCell = this.gamestate.getCellById(nextCell);
+            var nextCell = this.gamestate.getCellById(nextCellId);
 
             this.nextIntersection = this.getNextIntersection(this.lastIntersection, nextCell);
         }

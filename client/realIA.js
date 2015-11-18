@@ -1,11 +1,11 @@
 var Client = require('./client');
 var Config = require('./modules/config');
-var Constants = require('./constants');
+var Constants = require('./modules/constants');
 var IA = require('./modules/ia');
 
 var profile = {
     name: 'Skuzer',
-    avatar:'https://i.imgflip.com/t257l.jpg',
+    avatar:'',
     token: '',
     profil: Constants.GameProfiles.MASTER_OF_COINS
 };

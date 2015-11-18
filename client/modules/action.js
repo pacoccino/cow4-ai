@@ -111,7 +111,7 @@ var executeMove = function(target, gamestate, player) {
 };
 
 var executeUse = function(itemId, gamestate, player) {
-    var gsPlayer = this.gamestate.players.getPlayerById(player.id);
+    var gsPlayer = gamestate.players.getPlayerById(player.id);
 
     var itemIndex = _.findIndex(gsPlayer, {type: itemId});
     if(itemIndex !== -1) {
@@ -121,8 +121,8 @@ var executeUse = function(itemId, gamestate, player) {
 };
 
 var executeGet = function(gamestate, player) {
-    var gsPlayer = this.gamestate.players.getPlayerById(player.id);
-    var playerCell = this.gamestate.getCellById(gsPlayer.cellId);
+    var gsPlayer = gamestate.players.getPlayerById(player.id);
+    var playerCell = gamestate.getCellById(gsPlayer.cellId);
 
     var item = playerCell.item;
     gsPlayer.items.push(item);

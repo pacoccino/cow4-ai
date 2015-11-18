@@ -2,6 +2,7 @@ var _ = require('lodash');
 var Maze = require('./maze');
 var Action = require('./action');
 var Constants = require('./constants');
+var Route = require('./route');
 
 function Strategy(gamestate) {
     this.gamestate = gamestate;
@@ -29,7 +30,7 @@ Strategy.prototype.lazyRouteToSheep = function(estimatedGamestate) {
             var cell = route.cellPath[i];
 
             // La route contient l'ennemi
-            if(cell.occupantId === this.gamestate.getEnnemy().id)
+            if(cell.occupantId === this.gamestate.players.getEnnemy().id)
                 continue;
 
             if(route.items.length > bestRouteItems)
@@ -78,7 +79,7 @@ Strategy.prototype.routeToItem = function(estimatedGamestate) {
     }
 
     if(!route) {
-        return this.routeToSheep(estimatedGamestate);
+        return this.lazyRouteToSheep(estimatedGamestate);
     }
     else {
         if(route.cellPath.length === 1) {
@@ -100,14 +101,14 @@ Strategy.prototype.tryIfCanCatch = function() {
         var route = routesToSheep[j];
 
         // La route vers le poulet est trop longue
-        if(route.cellPath.length > this.gamestate.getMe().pm)
+        if(route.cellPath.length > this.gamestate.players.getMe().pm)
             continue;
 
         for (var i = 0; i < route.cellPath.length-1; i++) {
             var cell = route.cellPath[i];
 
             // La route contient l'ennemi
-            if(cell.occupantId === this.gamestate.getEnnemy().id)
+            if(cell.occupantId === this.gamestate.players.getEnnemy().id)
                 continue;
 
             // La route est correcte
@@ -161,6 +162,8 @@ Strategy.prototype.useItem = function() {
 
     for (var i = 0; i < items.length; i++) {
         var item = items[i];
+
+        // TODO
         if(item.type === 'parfum') {
             var action = new Action();
             action.useItem('parfum');
@@ -183,7 +186,7 @@ Strategy.prototype.getItem = function() {
         action.getItem();
         Action.executeOnGamestate(action, this.gamestate, me);
 
-        console.log('get item:', myCell.item.type);
+        console.log('get item:', myCell.item);
         return action;
     }
     else {
